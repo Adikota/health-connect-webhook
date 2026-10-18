@@ -2,6 +2,7 @@ package com.hcwebhook.app
 
 import android.content.Context
 import android.content.pm.PackageManager
+import android.util.Log
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -20,6 +21,11 @@ private fun JsonObjectBuilder.putRecordMetadata(meta: RecordMetadata) {
     putJsonObject("metadata") {
         put("data_origin", meta.dataOrigin)
         put("recording_method", meta.recordingMethod)
+        // Record identity, so a receiver can replace an edited record and apply "deleted".
+        if (meta.id.isNotEmpty()) put("id", meta.id)
+        meta.clientRecordId?.let { put("client_record_id", it) }
+        if (meta.clientRecordVersion != 0L) put("client_record_version", meta.clientRecordVersion)
+        meta.lastModifiedTime?.let { put("last_modified_time", it.toString()) }
         if (meta.deviceManufacturer != null || meta.deviceModel != null || meta.deviceType != null) {
             putJsonObject("device") {
                 meta.deviceManufacturer?.let { put("manufacturer", it) }
@@ -125,23 +131,60 @@ class SyncManager(private val context: Context) {
                 emptyMap()
             }
 
+            // Incremental sync also asks the Health Connect Changes API what changed since the
+            // last sync: edits and late writes that the lastSync filter drops, and deletions.
+            val readEnd = end ?: Instant.now()
+            var typeChanges = if (!hasExplicitRange) {
+                healthConnectManager.readChanges(
+                    types = enabledTypes,
+                    tokens = enabledTypes.associateWith { preferencesManager.getChangesToken(it) },
+                    lastSyncTimestamps = lastSyncTimestamps,
+                    windowEnd = readEnd,
+                )
+            } else {
+                emptyMap()
+            }
+
             // Read health data
-            val healthDataResult = healthConnectManager.readHealthData(
-                enabledTypes = enabledTypes,
-                lastSyncTimestamps = lastSyncTimestamps,
-                timeRangeDays = timeRangeDays,
-                start = start,
-                end = end,
-                dataTypeResolutions = preferencesManager.getDataTypeResolutions(),
-            )
+            suspend fun readData(changes: Map<HealthDataType, TypeChanges>): Result<HealthData> =
+                healthConnectManager.readHealthData(
+                    enabledTypes = enabledTypes,
+                    lastSyncTimestamps = lastSyncTimestamps,
+                    timeRangeDays = timeRangeDays,
+                    start = start,
+                    end = readEnd,
+                    dataTypeResolutions = preferencesManager.getDataTypeResolutions(),
+                    changes = changes.mapValues { it.value.changed },
+                ).map { data ->
+                    data.copy(
+                        deleted = changes.flatMap { (type, typeChange) ->
+                            typeChange.deletedIds.map { DeletedRecord(type, it) }
+                        },
+                    )
+                }
+
+            var healthDataResult = readData(typeChanges)
             if (healthDataResult.isFailure) {
                 return@withContext Result.failure(healthDataResult.exceptionOrNull() ?: Exception("Failed to read health data"))
             }
+            var healthData = healthDataResult.getOrThrow()
 
-            val healthData = healthDataResult.getOrThrow()
+            // A big late write (e.g. weeks of heart rate from a watch) can make the changed
+            // records too large to send. The tokens move on only after a successful sync, so
+            // every sync would fail again. Drop the changed records once and send the rest.
+            if (countHealthData(healthData) > MAX_RECORDS_PER_PAYLOAD && typeChanges.hasChangedRecords()) {
+                Log.w(TAG, "Payload too large with changed records; sending without them")
+                typeChanges = typeChanges.withoutChangedRecords()
+                healthDataResult = readData(typeChanges)
+                if (healthDataResult.isFailure) {
+                    return@withContext Result.failure(healthDataResult.exceptionOrNull() ?: Exception("Failed to read health data"))
+                }
+                healthData = healthDataResult.getOrThrow()
+            }
 
             // Check if there's any new data
             if (isHealthDataEmpty(healthData)) {
+                saveChangesTokens(typeChanges)
                 preferencesManager.setLastSyncTime(Instant.now().toEpochMilli())
                 preferencesManager.setLastSyncSummary("No new data")
                 return@withContext Result.success(SyncResult.NoData)
@@ -281,6 +324,7 @@ class SyncManager(private val context: Context) {
             // Update last sync timestamps
             val syncCounts = mutableMapOf<HealthDataType, Int>()
             updateSyncTimestamps(healthData, syncCounts)
+            saveChangesTokens(typeChanges)
 
             // Save last sync status for UI display
             val summary = buildSyncSummary(healthData)
@@ -300,6 +344,11 @@ class SyncManager(private val context: Context) {
                 )
             )
         }
+    }
+
+    /** Store the next Changes tokens only after a sync succeeds, so failed syncs read the changes again. */
+    private fun saveChangesTokens(typeChanges: Map<HealthDataType, TypeChanges>) {
+        typeChanges.forEach { (type, changes) -> preferencesManager.setChangesToken(type, changes.nextToken) }
     }
 
     private fun filterHealthData(data: HealthData, allowedTypes: Set<String>): HealthData {
@@ -336,7 +385,8 @@ class SyncManager(private val context: Context) {
             ovulationTest = if ("OVULATION_TEST" in allowed) data.ovulationTest else emptyList(),
             cervicalMucus = if ("CERVICAL_MUCUS" in allowed) data.cervicalMucus else emptyList(),
             sexualActivity = if ("SEXUAL_ACTIVITY" in allowed) data.sexualActivity else emptyList(),
-            basalBodyTemperature = if ("BASAL_BODY_TEMPERATURE" in allowed) data.basalBodyTemperature else emptyList()
+            basalBodyTemperature = if ("BASAL_BODY_TEMPERATURE" in allowed) data.basalBodyTemperature else emptyList(),
+            deleted = data.deleted.filter { it.type.name in allowed },
         )
     }
 
@@ -351,7 +401,8 @@ class SyncManager(private val context: Context) {
                 data.leanBodyMass.size + data.bodyWaterMass.size + data.vo2Max.size + data.boneMass.size +
                 data.menstruationFlow.size + data.menstruationPeriod.size +
                 data.intermenstrualBleeding.size + data.ovulationTest.size +
-                data.cervicalMucus.size + data.sexualActivity.size + data.basalBodyTemperature.size
+                data.cervicalMucus.size + data.sexualActivity.size + data.basalBodyTemperature.size +
+                data.deleted.size
     }
 
     private fun isHealthDataEmpty(data: HealthData): Boolean {
@@ -368,7 +419,8 @@ class SyncManager(private val context: Context) {
                 data.vo2Max.isEmpty() && data.boneMass.isEmpty() &&
                 data.menstruationFlow.isEmpty() && data.menstruationPeriod.isEmpty() &&
                 data.intermenstrualBleeding.isEmpty() && data.ovulationTest.isEmpty() &&
-                data.cervicalMucus.isEmpty() && data.sexualActivity.isEmpty() && data.basalBodyTemperature.isEmpty()
+                data.cervicalMucus.isEmpty() && data.sexualActivity.isEmpty() && data.basalBodyTemperature.isEmpty() &&
+                data.deleted.isEmpty()
     }
 
     /**
@@ -557,6 +609,9 @@ class SyncManager(private val context: Context) {
         }
         if (data.heartRateVariability.isNotEmpty()) {
             parts.add("${data.heartRateVariability.size} HRV")
+        }
+        if (data.deleted.isNotEmpty()) {
+            parts.add("${data.deleted.size} deleted")
         }
 
         return if (parts.isEmpty()) "No new data" else parts.joinToString(" · ")
@@ -989,6 +1044,15 @@ class SyncManager(private val context: Context) {
                     }) }
                 }
             }
+
+            if (healthData.deleted.isNotEmpty()) {
+                putJsonArray("deleted") {
+                    healthData.deleted.forEach { add(buildJsonObject {
+                        put("type", it.type.name.lowercase())
+                        put("id", it.id)
+                    }) }
+                }
+            }
         } // End of buildJsonObject block
 
         return json.toString()
@@ -1000,6 +1064,7 @@ class SyncManager(private val context: Context) {
          * exceed this and OOMs mid-tier devices while building JsonObject trees.
          */
         private const val MAX_RECORDS_PER_PAYLOAD = 25_000
+        private const val TAG = "SyncManager"
     }
 
     private data class BmiEntry(
