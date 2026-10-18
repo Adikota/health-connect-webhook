@@ -122,6 +122,21 @@ class ProtobufPayloadBuilderTest {
     }
 
     @Test
+    fun build_includesNutritionMealType() {
+        val t = Instant.parse("2026-05-09T08:00:00Z")
+        val data = emptyHealthData().copy(
+            nutrition = listOf(
+                NutritionData(500.0, null, null, null, null, null, null, null, t, t, mealType = "lunch"),
+                NutritionData(200.0, null, null, null, null, null, null, null, t, t),
+            )
+        )
+
+        val payload = ProtobufPayloadBuilder.build(data, "1.0.0", t)
+        assertEquals("lunch", payload.getNutrition(0).mealType)
+        assertFalse(payload.getNutrition(1).hasMealType())
+    }
+
+    @Test
     fun build_includesMindfulnessSessions() {
         val start = Instant.parse("2026-05-09T07:00:00Z")
         val data = emptyHealthData().copy(

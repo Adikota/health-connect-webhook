@@ -316,6 +316,8 @@ message NutritionRecord {
   optional double dietary_fiber_grams = 9;
   optional string name = 10;
   optional RecordMetadata metadata = 11;
+  // "breakfast", "lunch", "dinner" or "snack" when the writing app set one.
+  optional string meal_type = 12;
 }
 
 message BasalMetabolicRateRecord {

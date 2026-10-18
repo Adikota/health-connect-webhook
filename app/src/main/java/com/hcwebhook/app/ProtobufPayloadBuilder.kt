@@ -288,6 +288,7 @@ object ProtobufPayloadBuilder {
             it.sodium?.let { s -> n.setSodiumGrams(s) }
             it.dietaryFiber?.let { f -> n.setDietaryFiberGrams(f) }
             it.name?.let { name -> n.setName(name) }
+            it.mealType?.let { mealType -> n.setMealType(mealType) }
             it.metadata?.let { meta -> n.metadata = meta.toProto() }
             builder.addNutrition(n.build())
         }

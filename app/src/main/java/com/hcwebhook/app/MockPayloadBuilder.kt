@@ -274,6 +274,7 @@ object MockPayloadBuilder {
                             it.sodium?.let { s -> put("sodium_grams", s) }
                             it.dietaryFiber?.let { f -> put("dietary_fiber_grams", f) }
                             it.name?.let { n -> put("name", n) }
+                            it.mealType?.let { m -> put("meal_type", m) }
                             put("start_time", time.format(it.startTime))
                             put("end_time", time.format(it.endTime))
                             it.metadata?.let { meta -> putMetadata(meta) }

@@ -438,6 +438,7 @@ Health Connect can store multiple samples per interval; with Full resolution the
 | `sodium_grams` | number | no | |
 | `dietary_fiber_grams` | number | no | |
 | `name` | string | no | Meal or item label when provided. |
+| `meal_type` | string | no | `breakfast`, `lunch`, `dinner` or `snack` when the writing app set one. Omitted for unknown meal types and for merged (bucketed or daily) records. Diary apps such as MyFitnessPal write one unnamed record per meal with identical times; this field tells them apart. |
 
 ### `basal_metabolic_rate` — array of objects
 

@@ -917,6 +917,7 @@ class SyncManager(private val context: Context) {
                         it.sodium?.let { sodium -> put("sodium_grams", sodium) }
                         it.dietaryFiber?.let { fiber -> put("dietary_fiber_grams", fiber) }
                         it.name?.let { name -> put("name", name) }
+                        it.mealType?.let { mealType -> put("meal_type", mealType) }
                         put("start_time", time.format(it.startTime))
                         put("end_time", time.format(it.endTime))
                         it.metadata?.let { meta -> putRecordMetadata(meta, time) }
