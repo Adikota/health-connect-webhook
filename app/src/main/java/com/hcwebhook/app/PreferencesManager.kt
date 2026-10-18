@@ -45,6 +45,7 @@ class PreferencesManager(context: Context) {
         private const val KEY_SCHEDULED_SYNCS = "scheduled_syncs"
         private const val KEY_KNOWN_GRANTED_PERMISSIONS = "known_granted_permissions"
         private const val KEY_HAS_SEEN_ONBOARDING = "has_seen_onboarding"
+        private const val KEY_LAST_TRIGGER_TIME = "last_trigger_time"
         private const val KEY_TIMESTAMP_STYLE = "timestamp_style"
         private const val KEY_LAST_SEEN_VERSION_CODE = "last_seen_version_code"
         private const val KEY_LOCAL_TCP_ENABLED = "local_tcp_enabled"
@@ -323,6 +324,14 @@ class PreferencesManager(context: Context) {
 
     fun setLastSyncTime(timestamp: Long) {
         prefs.edit().putLong(KEY_LAST_SYNC_TIME, timestamp).apply()
+    }
+
+    /** When the tile, widget or broadcast last started a sync (see SyncTrigger). */
+    fun getLastTriggerTime(): Long? =
+        prefs.getLong(KEY_LAST_TRIGGER_TIME, -1L).takeIf { it >= 0 }
+
+    fun setLastTriggerTime(timestamp: Long) {
+        prefs.edit().putLong(KEY_LAST_TRIGGER_TIME, timestamp).apply()
     }
 
     fun getLastSyncSummary(): String? {

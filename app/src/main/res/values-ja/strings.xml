@@ -470,4 +470,11 @@
     <string name="app_lock_unlock">ロック解除</string>
     <string name="app_lock_prompt_title">HC Webhook のロックを解除</string>
     <string name="app_lock_confirm">確認してアプリのロックをオンにします</string>
+    <string name="trigger_tile_label">健康データを同期</string>
+    <string name="trigger_sync_started">同期を開始しました</string>
+    <string name="trigger_try_again">1 分後にもう一度お試しください</string>
+    <string name="trigger_never_synced">まだ同期していません</string>
+    <string name="trigger_last_sync">最終同期 %1$s</string>
+    <string name="trigger_widget_label">同期ステータス</string>
+    <string name="trigger_widget_description">最終同期時刻と今すぐ同期するボタン</string>
 </resources>

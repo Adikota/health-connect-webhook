@@ -135,7 +135,7 @@ class SyncForegroundService : Service() {
             }
         }
 
-        private fun ensureNotificationChannel(context: Context) {
+        fun ensureNotificationChannel(context: Context) {
             val manager =
                 context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             if (manager.getNotificationChannel(CHANNEL_ID) != null) return

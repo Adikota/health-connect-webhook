@@ -470,4 +470,11 @@
     <string name="app_lock_unlock">解锁</string>
     <string name="app_lock_prompt_title">解锁 HC Webhook</string>
     <string name="app_lock_confirm">确认以开启应用锁</string>
+    <string name="trigger_tile_label">同步健康数据</string>
+    <string name="trigger_sync_started">已开始同步</string>
+    <string name="trigger_try_again">请一分钟后再试</string>
+    <string name="trigger_never_synced">尚未同步</string>
+    <string name="trigger_last_sync">上次同步 %1$s</string>
+    <string name="trigger_widget_label">同步状态</string>
+    <string name="trigger_widget_description">上次同步时间和立即同步按钮</string>
 </resources>

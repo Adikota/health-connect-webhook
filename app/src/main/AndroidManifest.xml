@@ -120,6 +120,38 @@
             android:foregroundServiceType="dataSync" />
 
         <!-- Scheduled Sync Receiver -->
+        <!-- Tasker / MacroDroid / adb: broadcast com.hcwebhook.app.ACTION_SYNC to this package. -->
+        <receiver
+            android:name=".SyncTriggerReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.hcwebhook.app.ACTION_SYNC" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".SyncStatusWidget"
+            android:exported="true"
+            android:label="@string/trigger_widget_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/sync_status_widget_info" />
+        </receiver>
+
+        <service
+            android:name=".SyncTileService"
+            android:exported="true"
+            android:icon="@drawable/ic_sync"
+            android:label="@string/trigger_tile_label"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
         <receiver
             android:name=".ScheduledSyncReceiver"
             android:exported="true">

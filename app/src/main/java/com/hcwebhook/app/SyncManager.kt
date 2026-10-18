@@ -178,6 +178,7 @@ class SyncManager(private val context: Context) {
                 saveChangesTokens(typeChanges)
                 preferencesManager.setLastSyncTime(Instant.now().toEpochMilli())
                 preferencesManager.setLastSyncSummary("No new data")
+                SyncStatusWidget.updateAll(context)
                 return@withContext Result.success(SyncResult.NoData)
             }
 
@@ -332,6 +333,7 @@ class SyncManager(private val context: Context) {
                 if (!atLeastOneAttempted) {
                     preferencesManager.setLastSyncTime(Instant.now().toEpochMilli())
                     preferencesManager.setLastSyncSummary("No matching data")
+                    SyncStatusWidget.updateAll(context)
                     return@withContext Result.success(SyncResult.NoMatchingData)
                 }
                 if (!atLeastOneSuccess) {
@@ -351,6 +353,7 @@ class SyncManager(private val context: Context) {
             val summary = buildSyncSummary(healthData)
             preferencesManager.setLastSyncTime(Instant.now().toEpochMilli())
             preferencesManager.setLastSyncSummary(summary)
+            SyncStatusWidget.updateAll(context)
 
             Result.success(SyncResult.Success(syncCounts))
         } catch (e: CancellationException) {

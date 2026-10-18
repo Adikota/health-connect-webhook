@@ -489,6 +489,13 @@
     <string name="app_lock_unlock">Unlock</string>
     <string name="app_lock_prompt_title">Unlock HC Webhook</string>
     <string name="app_lock_confirm">Confirm to turn on app lock</string>
+    <string name="trigger_tile_label">Sync health data</string>
+    <string name="trigger_sync_started">Sync started</string>
+    <string name="trigger_try_again">Try again in a minute</string>
+    <string name="trigger_never_synced">Not synced yet</string>
+    <string name="trigger_last_sync">Last sync %1$s</string>
+    <string name="trigger_widget_label">Sync status</string>
+    <string name="trigger_widget_description">Last sync time and a button to sync now</string>
 </resources>
 
 

@@ -470,4 +470,11 @@
     <string name="app_lock_unlock">திற</string>
     <string name="app_lock_prompt_title">HC Webhook ஐத் திற</string>
     <string name="app_lock_confirm">ஆப் பூட்டை இயக்க உறுதிசெய்யவும்</string>
+    <string name="trigger_tile_label">உடல்நல தரவை ஒத்திசை</string>
+    <string name="trigger_sync_started">ஒத்திசைவு தொடங்கியது</string>
+    <string name="trigger_try_again">ஒரு நிமிடத்தில் மீண்டும் முயலவும்</string>
+    <string name="trigger_never_synced">இன்னும் ஒத்திசைக்கப்படவில்லை</string>
+    <string name="trigger_last_sync">கடைசி ஒத்திசைவு %1$s</string>
+    <string name="trigger_widget_label">ஒத்திசைவு நிலை</string>
+    <string name="trigger_widget_description">கடைசி ஒத்திசைவு நேரம் மற்றும் இப்போது ஒத்திசைக்கும் பொத்தான்</string>
 </resources>

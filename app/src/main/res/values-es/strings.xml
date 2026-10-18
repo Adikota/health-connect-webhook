@@ -470,4 +470,11 @@
     <string name="app_lock_unlock">Desbloquear</string>
     <string name="app_lock_prompt_title">Desbloquear HC Webhook</string>
     <string name="app_lock_confirm">Confirma para activar el bloqueo de la app</string>
+    <string name="trigger_tile_label">Sincronizar salud</string>
+    <string name="trigger_sync_started">Sincronización iniciada</string>
+    <string name="trigger_try_again">Inténtelo de nuevo en un minuto</string>
+    <string name="trigger_never_synced">Aún no sincronizado</string>
+    <string name="trigger_last_sync">Última sincronización %1$s</string>
+    <string name="trigger_widget_label">Estado de sincronización</string>
+    <string name="trigger_widget_description">Hora de la última sincronización y un botón para sincronizar</string>
 </resources>
