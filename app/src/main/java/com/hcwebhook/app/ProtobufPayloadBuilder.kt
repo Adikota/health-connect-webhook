@@ -289,6 +289,7 @@ object ProtobufPayloadBuilder {
             it.dietaryFiber?.let { f -> n.setDietaryFiberGrams(f) }
             it.name?.let { name -> n.setName(name) }
             it.mealType?.let { mealType -> n.setMealType(mealType) }
+            if (it.nutrients.isNotEmpty()) n.putAllNutrients(it.nutrients)
             it.metadata?.let { meta -> n.metadata = meta.toProto() }
             builder.addNutrition(n.build())
         }

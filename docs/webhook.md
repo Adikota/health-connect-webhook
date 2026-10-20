@@ -439,6 +439,8 @@ Health Connect can store multiple samples per interval; with Full resolution the
 | `dietary_fiber_grams` | number | no | |
 | `name` | string | no | Meal or item label when provided. |
 | `meal_type` | string | no | `breakfast`, `lunch`, `dinner` or `snack` when the writing app set one. Omitted for unknown meal types and for merged (bucketed or daily) records. Diary apps such as MyFitnessPal write one unnamed record per meal with identical times; this field tells them apart. |
+| `energy_from_fat_calories` | number | no | Kilocalories from fat, when set. |
+| further nutrients | number | no | Each only when the writing app set it, in grams like the fields above: `saturated_fat_grams`, `unsaturated_fat_grams`, `monounsaturated_fat_grams`, `polyunsaturated_fat_grams`, `trans_fat_grams`, `cholesterol_grams`, `caffeine_grams`, `vitamin_a_grams`, `vitamin_c_grams`, `vitamin_d_grams`, `vitamin_e_grams`, `vitamin_k_grams`, `thiamin_grams`, `riboflavin_grams`, `niacin_grams`, `vitamin_b6_grams`, `vitamin_b12_grams`, `folate_grams`, `folic_acid_grams`, `biotin_grams`, `pantothenic_acid_grams`, `calcium_grams`, `iron_grams`, `magnesium_grams`, `potassium_grams`, `zinc_grams`, `phosphorus_grams`, `selenium_grams`, `copper_grams`, `manganese_grams`, `chromium_grams`, `molybdenum_grams`, `iodine_grams`, `chloride_grams`. Merged (bucketed or daily) records sum them. In protobuf these arrive in the `nutrients` map. |
 
 ### `basal_metabolic_rate` — array of objects
 

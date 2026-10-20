@@ -394,7 +394,56 @@ data class NutritionData(
     val endTime: Instant,
     val metadata: RecordMetadata? = null,
     val mealType: String? = null,
+    val nutrients: Map<String, Double> = emptyMap(),
 )
+
+/**
+ * Nutrients beyond the seven fields above, keyed by their JSON name. Masses are in grams like
+ * the existing fields; [NutritionRecord.energyFromFat] is in kilocalories. Only set values appear.
+ */
+internal val EXTRA_NUTRIENT_FIELDS: List<Pair<String, (NutritionRecord) -> androidx.health.connect.client.units.Mass?>> = listOf(
+    "saturated_fat_grams" to { it.saturatedFat },
+    "unsaturated_fat_grams" to { it.unsaturatedFat },
+    "monounsaturated_fat_grams" to { it.monounsaturatedFat },
+    "polyunsaturated_fat_grams" to { it.polyunsaturatedFat },
+    "trans_fat_grams" to { it.transFat },
+    "cholesterol_grams" to { it.cholesterol },
+    "caffeine_grams" to { it.caffeine },
+    "vitamin_a_grams" to { it.vitaminA },
+    "vitamin_c_grams" to { it.vitaminC },
+    "vitamin_d_grams" to { it.vitaminD },
+    "vitamin_e_grams" to { it.vitaminE },
+    "vitamin_k_grams" to { it.vitaminK },
+    "thiamin_grams" to { it.thiamin },
+    "riboflavin_grams" to { it.riboflavin },
+    "niacin_grams" to { it.niacin },
+    "vitamin_b6_grams" to { it.vitaminB6 },
+    "vitamin_b12_grams" to { it.vitaminB12 },
+    "folate_grams" to { it.folate },
+    "folic_acid_grams" to { it.folicAcid },
+    "biotin_grams" to { it.biotin },
+    "pantothenic_acid_grams" to { it.pantothenicAcid },
+    "calcium_grams" to { it.calcium },
+    "iron_grams" to { it.iron },
+    "magnesium_grams" to { it.magnesium },
+    "potassium_grams" to { it.potassium },
+    "zinc_grams" to { it.zinc },
+    "phosphorus_grams" to { it.phosphorus },
+    "selenium_grams" to { it.selenium },
+    "copper_grams" to { it.copper },
+    "manganese_grams" to { it.manganese },
+    "chromium_grams" to { it.chromium },
+    "molybdenum_grams" to { it.molybdenum },
+    "iodine_grams" to { it.iodine },
+    "chloride_grams" to { it.chloride }
+)
+
+internal fun NutritionRecord.extraNutrients(): Map<String, Double> {
+    val out = LinkedHashMap<String, Double>()
+    energyFromFat?.let { out["energy_from_fat_calories"] = it.inKilocalories }
+    for ((key, get) in EXTRA_NUTRIENT_FIELDS) get(this)?.let { out[key] = it.inGrams }
+    return out
+}
 
 internal fun mealTypeName(mealType: Int): String? = when (mealType) {
     MealType.MEAL_TYPE_BREAKFAST -> "breakfast"
@@ -2051,6 +2100,7 @@ class HealthConnectManager(private val context: Context) {
                     endTime = it.endTime,
                     metadata = it.toRecordMetadata(startZoneOffset = it.startZoneOffset, endZoneOffset = it.endZoneOffset),
                     mealType = mealTypeName(it.mealType),
+                    nutrients = it.extraNutrients(),
                 )
             }
     }
@@ -2064,6 +2114,7 @@ class HealthConnectManager(private val context: Context) {
             sugar = records.mapNotNull { it.sugar }.takeIf { it.isNotEmpty() }?.sum(),
             sodium = records.mapNotNull { it.sodium }.takeIf { it.isNotEmpty() }?.sum(),
             dietaryFiber = records.mapNotNull { it.dietaryFiber }.takeIf { it.isNotEmpty() }?.sum(),
+            nutrients = records.flatMap { it.nutrients.entries }.groupBy({ it.key }, { it.value }).mapValues { (_, v) -> v.sum() },
             name = null,
             startTime = startTime,
             endTime = endTime,

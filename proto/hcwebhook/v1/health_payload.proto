@@ -318,6 +318,10 @@ message NutritionRecord {
   optional RecordMetadata metadata = 11;
   // "breakfast", "lunch", "dinner" or "snack" when the writing app set one.
   optional string meal_type = 12;
+  // Further nutrients the writing app set, keyed like the JSON fields
+  // (e.g. "saturated_fat_grams", "vitamin_c_grams", "energy_from_fat_calories").
+  // Masses in grams, energy in kilocalories.
+  map<string, double> nutrients = 13;
 }
 
 message BasalMetabolicRateRecord {
