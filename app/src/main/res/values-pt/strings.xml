@@ -480,8 +480,8 @@
     <string name="widget_counts">Enviados %1$d · Falhas %2$d · 24 h</string>
     <string name="widget_sync_now_label">Sincronizar agora</string>
     <string name="widget_sync_now_description">Inicie uma sincronização com um toque.</string>
-    <string name="widget_heartbeat_label">Pulso de sincronização</string>
-    <string name="widget_heartbeat_description">As sincronizações das últimas 24 horas, com Sincronizar agora.</string>
+    <string name="widget_heartbeat_label">Atividade de sincronização</string>
+    <string name="widget_heartbeat_description">Envios por hora das últimas 24 horas, com Sincronizar agora.</string>
     <string name="widget_today_label">Hoje</string>
     <string name="widget_today_description">Passos, sono, peso e frequência cardíaca de hoje.</string>
     <string name="widget_today_title">Hoje</string>

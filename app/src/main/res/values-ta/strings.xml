@@ -480,8 +480,8 @@
     <string name="widget_counts">அனுப்பியவை %1$d · தோல்வி %2$d · 24 ம.நே</string>
     <string name="widget_sync_now_label">இப்போது ஒத்திசை</string>
     <string name="widget_sync_now_description">ஒரு தட்டலில் ஒத்திசைவைத் தொடங்கு.</string>
-    <string name="widget_heartbeat_label">ஒத்திசைவு இதயத்துடிப்பு</string>
-    <string name="widget_heartbeat_description">கடந்த 24 மணிநேர ஒத்திசைவுகள், இப்போது ஒத்திசை உடன்.</string>
+    <string name="widget_heartbeat_label">ஒத்திசைவு செயல்பாடு</string>
+    <string name="widget_heartbeat_description">கடந்த 24 மணிநேரத்தின் மணிநேரத்திற்கான அனுப்புதல்கள், இப்போது ஒத்திசை உடன்.</string>
     <string name="widget_today_label">இன்று</string>
     <string name="widget_today_description">இன்றைய படிகள், தூக்கம், எடை மற்றும் இதயத் துடிப்பு.</string>
     <string name="widget_today_title">இன்று</string>

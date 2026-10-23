@@ -480,8 +480,8 @@
     <string name="widget_counts">已发送 %1$d · 失败 %2$d · 24 小时</string>
     <string name="widget_sync_now_label">立即同步</string>
     <string name="widget_sync_now_description">轻点一下即可开始同步。</string>
-    <string name="widget_heartbeat_label">同步心跳</string>
-    <string name="widget_heartbeat_description">过去 24 小时的同步，以及立即同步。</string>
+    <string name="widget_heartbeat_label">同步活动</string>
+    <string name="widget_heartbeat_description">过去 24 小时每小时的发送次数，以及立即同步。</string>
     <string name="widget_today_label">今天</string>
     <string name="widget_today_description">今天的步数、睡眠、体重和心率。</string>
     <string name="widget_today_title">今天</string>

@@ -499,8 +499,8 @@
     <string name="widget_counts">Sent %1$d · Failed %2$d · 24 h</string>
     <string name="widget_sync_now_label">Sync now</string>
     <string name="widget_sync_now_description">Start a sync with one tap.</string>
-    <string name="widget_heartbeat_label">Sync heartbeat</string>
-    <string name="widget_heartbeat_description">The syncs of the last 24 hours, with Sync now.</string>
+    <string name="widget_heartbeat_label">Sync activity</string>
+    <string name="widget_heartbeat_description">Deliveries per hour of the last 24 hours, with Sync now.</string>
     <string name="widget_today_label">Today</string>
     <string name="widget_today_description">Steps, sleep, weight and heart rate of today.</string>
     <string name="widget_today_title">Today</string>

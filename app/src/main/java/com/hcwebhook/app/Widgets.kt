@@ -9,7 +9,6 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
-import android.graphics.Path
 import android.os.Bundle
 import android.text.format.DateFormat
 import android.widget.RemoteViews
@@ -91,7 +90,7 @@ class SyncNowWidget : AppWidgetProvider() {
     }
 }
 
-/** 4×2: the 24-hour pulse line of the status card, the counts and Sync now. */
+/** 4×2: the 24-hour activity bars of the status card, the counts and Sync now. */
 class HeartbeatWidget : AppWidgetProvider() {
     override fun onUpdate(context: Context, manager: AppWidgetManager, ids: IntArray) {
         ids.forEach { manager.updateAppWidget(it, views(context, manager.getAppWidgetOptions(it))) }
@@ -109,50 +108,41 @@ class HeartbeatWidget : AppWidgetProvider() {
             R.id.widget_counts,
             context.getString(R.string.widget_counts, events.count { it.second }, events.count { !it.second }),
         )
-        views.setImageViewBitmap(R.id.widget_pulse, pulseBitmap(context, options, events))
+        views.setImageViewBitmap(R.id.widget_pulse, barsBitmap(context, options, events))
         views.setOnClickPendingIntent(R.id.widget_sync, Widgets.syncIntent(context, "widget_heartbeat"))
         Widgets.openAppIntent(context)?.let { views.setOnClickPendingIntent(R.id.widget_root, it) }
         return views
     }
 
-    /** The pulse line at the widget's own size: the same beats as the status card in the app. */
-    private fun pulseBitmap(context: Context, options: Bundle, events: List<Pair<Long, Boolean>>): Bitmap {
+    /** The activity bars at the widget's own size: the same bars as the status card in the app. */
+    private fun barsBitmap(context: Context, options: Bundle, events: List<Pair<Long, Boolean>>): Bitmap {
         val density = context.resources.displayMetrics.density
         val widthDp = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH).takeIf { it > 0 } ?: 300
         val width = ((widthDp - 32) * density).roundToInt().coerceIn(100, 1600)
-        val height = (48 * density).roundToInt()
+        val height = (40 * density).roundToInt()
         val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
         val ink = ContextCompat.getColor(context, R.color.widget_on_brand)
-        val stroke = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = ink
-            style = Paint.Style.STROKE
-            strokeWidth = 2 * density
-            strokeCap = Paint.Cap.ROUND
-            strokeJoin = Paint.Join.ROUND
+        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+        val bars = hourlyBars(events, System.currentTimeMillis())
+        val max = (bars.maxOfOrNull { it.total } ?: 0).coerceAtLeast(1)
+        val gap = 3 * density
+        val w = (width - gap * 23) / 24
+        fun bar(x: Float, h: Float, alpha: Float) {
+            paint.color = ink
+            paint.alpha = (alpha * 255).roundToInt()
+            canvas.drawRoundRect(x, height - h, x + w, height.toFloat(), w / 2, w / 2, paint)
         }
-        val dot = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = ink }
-        val now = System.currentTimeMillis()
-        val mid = height / 2f
-        val up = height * 0.45f
-        val half = 5 * density
-        val beats = pulseBeats(events, now - Widgets.DAY_MS, now, minGap = half * 3 / width).map { it.copy(x = it.x * width) }
-        val path = Path().apply {
-            moveTo(0f, mid)
-            beats.forEach { beat ->
-                val peak = if (beat.anyOk) mid - up else mid + up * 0.8f
-                val dip = if (beat.anyOk) mid + up * 0.25f else mid - up * 0.2f
-                lineTo((beat.x - half * 2).coerceAtLeast(0f), mid)
-                lineTo(beat.x - half, dip)
-                lineTo(beat.x, peak)
-                lineTo(beat.x + half, dip)
-                lineTo((beat.x + half * 2).coerceAtMost(width.toFloat()), mid)
+        bars.forEachIndexed { index, hour ->
+            val x = index * (w + gap)
+            if (hour.total == 0) {
+                bar(x, w, 0.12f)
+                return@forEachIndexed
             }
-            lineTo(width.toFloat(), mid)
+            val full = (height.toFloat() * hour.total / max).coerceAtLeast(w)
+            bar(x, full, 0.4f)
+            if (hour.sent > 0) bar(x, (full * hour.sent / hour.total).coerceAtLeast(w), 1f)
         }
-        canvas.drawPath(path, stroke)
-        beats.filter { it.anyFailed }.forEach { canvas.drawCircle(it.x, mid + up * 0.8f, 3 * density, dot) }
-        canvas.drawCircle(width - 3 * density, mid, 3 * density, dot)
         return bitmap
     }
 }

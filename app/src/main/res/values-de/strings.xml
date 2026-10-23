@@ -480,8 +480,8 @@
     <string name="widget_counts">Gesendet %1$d · Fehler %2$d · 24 h</string>
     <string name="widget_sync_now_label">Jetzt synchronisieren</string>
     <string name="widget_sync_now_description">Starte einen Sync mit einem Tippen.</string>
-    <string name="widget_heartbeat_label">Sync-Herzschlag</string>
-    <string name="widget_heartbeat_description">Die Syncs der letzten 24 Stunden, mit Jetzt synchronisieren.</string>
+    <string name="widget_heartbeat_label">Sync-Aktivität</string>
+    <string name="widget_heartbeat_description">Zustellungen pro Stunde der letzten 24 Stunden, mit Jetzt synchronisieren.</string>
     <string name="widget_today_label">Heute</string>
     <string name="widget_today_description">Schritte, Schlaf, Gewicht und Herzfrequenz von heute.</string>
     <string name="widget_today_title">Heute</string>

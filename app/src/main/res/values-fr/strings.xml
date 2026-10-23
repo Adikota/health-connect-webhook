@@ -480,8 +480,8 @@
     <string name="widget_counts">Envoyés %1$d · Échecs %2$d · 24 h</string>
     <string name="widget_sync_now_label">Synchroniser</string>
     <string name="widget_sync_now_description">Lancez une synchro d\'un seul geste.</string>
-    <string name="widget_heartbeat_label">Pouls de synchro</string>
-    <string name="widget_heartbeat_description">Les synchros des dernières 24 heures, avec Synchroniser.</string>
+    <string name="widget_heartbeat_label">Activité de synchro</string>
+    <string name="widget_heartbeat_description">Envois par heure des dernières 24 heures, avec Synchroniser.</string>
     <string name="widget_today_label">Aujourd\'hui</string>
     <string name="widget_today_description">Pas, sommeil, poids et fréquence cardiaque du jour.</string>
     <string name="widget_today_title">Aujourd\'hui</string>

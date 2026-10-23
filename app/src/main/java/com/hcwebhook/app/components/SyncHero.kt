@@ -3,7 +3,6 @@ package com.hcwebhook.app.components
 import android.text.format.DateUtils
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.CubicBezierEasing
-import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
@@ -12,12 +11,10 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.StrokeJoin
-import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.drawscope.clipRect
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -49,7 +46,7 @@ import com.hcwebhook.app.R
 import com.hcwebhook.app.SyncManager
 import com.hcwebhook.app.SyncResult
 import com.hcwebhook.app.WebhookConfig
-import com.hcwebhook.app.pulseBeats
+import com.hcwebhook.app.hourlyBars
 import com.hcwebhook.app.ui.SectionTitle
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
@@ -439,7 +436,7 @@ fun SyncHero(
             Spacer(Modifier.height(4.dp))
             Text(subtitle, style = MaterialTheme.typography.bodyMedium, color = colors.onPrimaryContainer.copy(alpha = 0.85f))
             Spacer(Modifier.height(16.dp))
-            PulseLine(events = syncEvents, now = now, active = isSyncing)
+            ActivityBars(events = syncEvents, now = now, active = isSyncing)
             Row(Modifier.fillMaxWidth().padding(top = 4.dp)) {
                 Text(stringResource(R.string.home_pulse_start), style = MaterialTheme.typography.labelMedium.copy(fontFamily = Mono), color = colors.onPrimaryContainer.copy(alpha = 0.7f), modifier = Modifier.weight(1f))
                 Text(stringResource(R.string.home_pulse_end), style = MaterialTheme.typography.labelMedium.copy(fontFamily = Mono), color = colors.onPrimaryContainer.copy(alpha = 0.7f))
@@ -492,59 +489,48 @@ fun SyncHero(
 private val EaseOutStrong = CubicBezierEasing(0.23f, 1f, 0.32f, 1f)
 
 /**
- * The last 24 hours as a heartbeat line: each webhook delivery is one beat, up when it went
- * through and down when it failed. It draws in once from left to right; during a sync a light
- * moves along it.
+ * Webhook deliveries per hour of the last 24 hours, like the activity bars of sms-webhook: a
+ * solid part for the sent deliveries and a faded part on top for the failed ones. Empty hours
+ * show as short stubs. The bars rise once from their stubs; during a sync the current hour
+ * pulses.
  */
 @Composable
-private fun PulseLine(events: List<Pair<Long, Boolean>>, now: Long, active: Boolean) {
+private fun ActivityBars(events: List<Pair<Long, Boolean>>, now: Long, active: Boolean) {
     val ink = MaterialTheme.colorScheme.onPrimaryContainer
-    val reveal = remember { Animatable(0f) }
-    LaunchedEffect(Unit) { reveal.animateTo(1f, tween(900, easing = EaseOutStrong)) }
-    val travel = rememberInfiniteTransition(label = "pulse")
-    val travelX by travel.animateFloat(0f, 1f, infiniteRepeatable(tween(1400, easing = LinearEasing)), label = "travel")
+    val bars = remember(events, now / (60 * 60 * 1000L)) { hourlyBars(events, now) }
+    val rise = remember { Animatable(0f) }
+    LaunchedEffect(Unit) { rise.animateTo(1f, tween(600, easing = EaseOutStrong)) }
+    val pulse = rememberInfiniteTransition(label = "sync")
+    val pulseAlpha by pulse.animateFloat(1f, 0.35f, infiniteRepeatable(tween(700), RepeatMode.Reverse), label = "pulse")
     val sent = events.count { it.second }
     val failed = events.size - sent
     val description = stringResource(R.string.home_pulse_description, sent, failed)
+    val max = (bars.maxOfOrNull { it.total } ?: 0).coerceAtLeast(1)
     Canvas(
         Modifier
             .fillMaxWidth()
-            .height(48.dp)
+            .height(40.dp)
             .semantics { contentDescription = description }
     ) {
-        val start = now - 24 * 60 * 60 * 1000L
-        val mid = size.height / 2
-        val beatHalf = 5.dp.toPx()
-        val up = size.height * 0.45f
-        val stroke = 2.dp.toPx()
-        val beats = pulseBeats(events, start, now, minGap = beatHalf * 3 / size.width)
-            .map { it.copy(x = it.x * size.width) }
-        val path = Path().apply {
-            moveTo(0f, mid)
-            beats.forEach { beat ->
-                val x = beat.x
-                val ok = beat.anyOk
-                val peak = if (ok) mid - up else mid + up * 0.8f
-                val dip = if (ok) mid + up * 0.25f else mid - up * 0.2f
-                lineTo((x - beatHalf * 2).coerceAtLeast(0f), mid)
-                lineTo(x - beatHalf, dip)
-                lineTo(x, peak)
-                lineTo(x + beatHalf, dip)
-                lineTo((x + beatHalf * 2).coerceAtMost(size.width), mid)
+        val gap = 3.dp.toPx()
+        val w = (size.width - gap * 23) / 24
+        val radius = CornerRadius(w / 2, w / 2)
+        bars.forEachIndexed { index, bar ->
+            val x = index * (w + gap)
+            val alpha = if (active && index == bars.lastIndex) pulseAlpha else 1f
+            if (bar.total == 0) {
+                drawRoundRect(ink.copy(alpha = 0.12f), Offset(x, size.height - w), Size(w, w), radius)
+                return@forEachIndexed
             }
-            lineTo(size.width, mid)
-        }
-        clipRect(right = size.width * reveal.value) {
-            drawPath(path, ink.copy(alpha = 0.9f), style = Stroke(width = stroke, cap = StrokeCap.Round, join = StrokeJoin.Round))
-            beats.filter { it.anyFailed }.forEach { beat ->
-                drawCircle(ink, radius = 3.dp.toPx(), center = Offset(beat.x, mid + up * 0.8f))
+            val full = (size.height * bar.total / max).coerceAtLeast(w)
+            val height = w + (full - w) * rise.value
+            val sentHeight = height * bar.sent / bar.total
+            // Failed on top, faded; sent below, solid. Both parts keep the round ends.
+            drawRoundRect(ink.copy(alpha = 0.4f * alpha), Offset(x, size.height - height), Size(w, height), radius)
+            if (bar.sent > 0) {
+                drawRoundRect(ink.copy(alpha = alpha), Offset(x, size.height - sentHeight), Size(w, sentHeight.coerceAtLeast(w)), radius)
             }
         }
-        if (active) {
-            drawCircle(ink, radius = 4.dp.toPx(), center = Offset(travelX * size.width, mid))
-        }
-        // The end of the line is now.
-        drawCircle(ink, radius = 3.dp.toPx(), center = Offset(size.width - 3.dp.toPx(), mid))
     }
 }
 

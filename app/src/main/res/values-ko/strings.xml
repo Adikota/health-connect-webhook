@@ -480,8 +480,8 @@
     <string name="widget_counts">전송 %1$d · 실패 %2$d · 24시간</string>
     <string name="widget_sync_now_label">지금 동기화</string>
     <string name="widget_sync_now_description">한 번 탭해 동기화를 시작합니다.</string>
-    <string name="widget_heartbeat_label">동기화 심박</string>
-    <string name="widget_heartbeat_description">최근 24시간의 동기화와 지금 동기화.</string>
+    <string name="widget_heartbeat_label">동기화 활동</string>
+    <string name="widget_heartbeat_description">최근 24시간의 시간별 전송 수와 지금 동기화.</string>
     <string name="widget_today_label">오늘</string>
     <string name="widget_today_description">오늘의 걸음 수, 수면, 체중, 심박수.</string>
     <string name="widget_today_title">오늘</string>
