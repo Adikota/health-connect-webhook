@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import com.hcwebhook.app.ui.GroupItem
 import com.hcwebhook.app.ui.IconBadge
+import com.hcwebhook.app.ui.theme.Mono
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -786,7 +787,7 @@ private fun ServerLogRow(log: ServerRequestLog, onClick: () -> Unit) {
     val ok = log.statusCode in 200..299
     ListItem(
         headlineContent = { Text("${log.method} ${log.path}", maxLines = 1, overflow = TextOverflow.Ellipsis) },
-        supportingContent = { Text("${log.clientIp} · ${formatTimestamp(log.timestamp)} · ${log.responseTimeMs} ms", maxLines = 1, overflow = TextOverflow.Ellipsis) },
+        supportingContent = { Text("${log.clientIp} · ${formatTimestamp(log.timestamp)} · ${log.responseTimeMs} ms", style = MaterialTheme.typography.bodyMedium.copy(fontFamily = Mono), maxLines = 1, overflow = TextOverflow.Ellipsis) },
         leadingContent = {
             if (ok) {
                 IconBadge(Icons.Filled.Check, container = colors.tertiaryContainer, content = colors.onTertiaryContainer)
@@ -795,7 +796,7 @@ private fun ServerLogRow(log: ServerRequestLog, onClick: () -> Unit) {
             }
         },
         trailingContent = {
-            Text("${log.statusCode}", style = MaterialTheme.typography.bodyMedium, color = if (ok) colors.tertiary else colors.error)
+            Text("${log.statusCode}", style = MaterialTheme.typography.bodyMedium.copy(fontFamily = Mono), color = if (ok) colors.tertiary else colors.error)
         },
         colors = ListItemDefaults.colors(containerColor = Color.Transparent),
         modifier = Modifier.clickable(onClick = onClick),
@@ -916,6 +917,7 @@ private fun LogRow(log: WebhookLog, webhookName: String? = null, onClick: () -> 
         supportingContent = {
             Text(
                 listOfNotNull(formatTimestamp(log.timestamp), syncLabel, log.recordCount?.let { stringResource(R.string.logs_items_count, it) }).joinToString(" · "),
+                style = MaterialTheme.typography.bodyMedium.copy(fontFamily = Mono),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -930,7 +932,7 @@ private fun LogRow(log: WebhookLog, webhookName: String? = null, onClick: () -> 
         trailingContent = {
             Text(
                 text = "${log.statusCode ?: stringResource(R.string.logs_status_err)}",
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.bodyMedium.copy(fontFamily = Mono),
                 color = if (log.success) colors.tertiary else colors.error,
             )
         },

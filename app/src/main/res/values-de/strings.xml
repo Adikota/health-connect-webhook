@@ -433,4 +433,7 @@
     <string name="webhooks_empty_title">Noch keine Webhooks</string>
     <string name="logs_sync_outbox">Warteschlange</string>
     <string name="logs_items_count">Einträge: %1$d</string>
+    <string name="home_pulse_start">vor 24 h</string>
+    <string name="home_pulse_end">Jetzt</string>
+    <string name="home_pulse_description">Letzte 24 Stunden: %1$d gesendet, %2$d fehlgeschlagen</string>
 </resources>

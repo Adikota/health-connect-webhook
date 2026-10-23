@@ -433,4 +433,7 @@
     <string name="webhooks_empty_title">Nessun webhook</string>
     <string name="logs_sync_outbox">In coda</string>
     <string name="logs_items_count">Elementi: %1$d</string>
+    <string name="home_pulse_start">24 h fa</string>
+    <string name="home_pulse_end">Ora</string>
+    <string name="home_pulse_description">Ultime 24 ore: %1$d inviati, %2$d non riusciti</string>
 </resources>

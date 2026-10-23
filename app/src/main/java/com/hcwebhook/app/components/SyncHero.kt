@@ -1,6 +1,27 @@
 package com.hcwebhook.app.components
 
 import android.text.format.DateUtils
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.CubicBezierEasing
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.clipRect
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import com.hcwebhook.app.ui.theme.Mono
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -48,6 +69,8 @@ fun SyncHero(
     sentLast24h: Int?,
     failedLast24h: Int?,
     lastSyncTime: Long?,
+    /** Webhook deliveries of the last 24 hours: time and success. */
+    syncEvents: List<Pair<Long, Boolean>> = emptyList(),
     canSync: Boolean,
     onSyncCompleted: () -> Unit = {},
 ) {
@@ -414,23 +437,33 @@ fun SyncHero(
             Text(title, style = MaterialTheme.typography.headlineSmall)
             Spacer(Modifier.height(4.dp))
             Text(subtitle, style = MaterialTheme.typography.bodyMedium, color = colors.onPrimaryContainer.copy(alpha = 0.85f))
-            Spacer(Modifier.height(20.dp))
+            Spacer(Modifier.height(16.dp))
+            PulseLine(events = syncEvents, now = now, active = isSyncing)
+            Row(Modifier.fillMaxWidth().padding(top = 4.dp)) {
+                Text(stringResource(R.string.home_pulse_start), style = MaterialTheme.typography.labelMedium.copy(fontFamily = Mono), color = colors.onPrimaryContainer.copy(alpha = 0.7f), modifier = Modifier.weight(1f))
+                Text(stringResource(R.string.home_pulse_end), style = MaterialTheme.typography.labelMedium.copy(fontFamily = Mono), color = colors.onPrimaryContainer.copy(alpha = 0.7f))
+            }
+            Spacer(Modifier.height(16.dp))
             Row(Modifier.fillMaxWidth()) {
                 HeroStat(lastSyncText, stringResource(R.string.home_hero_last_sync), Modifier.weight(1.4f))
                 HeroStat(sentLast24h?.toString() ?: "–", stringResource(R.string.home_hero_sent), Modifier.weight(1f))
                 HeroStat(failedLast24h?.toString() ?: "–", stringResource(R.string.home_hero_failed), Modifier.weight(1f))
             }
             Spacer(Modifier.height(20.dp))
+            val pressSource = remember { MutableInteractionSource() }
+            val pressed by pressSource.collectIsPressedAsState()
+            val pressScale by animateFloatAsState(if (pressed) 0.97f else 1f, tween(160, easing = EaseOutStrong), label = "press")
             Button(
                 onClick = { showConfirmSheet = true },
                 enabled = canSync && !isSyncing,
+                interactionSource = pressSource,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = colors.onPrimaryContainer,
                     contentColor = colors.primaryContainer,
                     disabledContainerColor = colors.onPrimaryContainer.copy(alpha = 0.3f),
                     disabledContentColor = colors.onPrimaryContainer.copy(alpha = 0.7f),
                 ),
-                modifier = Modifier.fillMaxWidth().height(48.dp),
+                modifier = Modifier.fillMaxWidth().height(48.dp).graphicsLayer { scaleX = pressScale; scaleY = pressScale },
             ) {
                 if (isSyncing) {
                     CircularProgressIndicator(modifier = Modifier.size(18.dp), strokeWidth = 2.dp, color = colors.primaryContainer)
@@ -454,10 +487,74 @@ fun SyncHero(
     }
 }
 
+/** Strong ease-out: starts fast, so the UI feels like it answers at once. */
+private val EaseOutStrong = CubicBezierEasing(0.23f, 1f, 0.32f, 1f)
+
+/**
+ * The last 24 hours as a heartbeat line: each webhook delivery is one beat, up when it went
+ * through and down when it failed. It draws in once from left to right; during a sync a light
+ * moves along it.
+ */
+@Composable
+private fun PulseLine(events: List<Pair<Long, Boolean>>, now: Long, active: Boolean) {
+    val ink = MaterialTheme.colorScheme.onPrimaryContainer
+    val reveal = remember { Animatable(0f) }
+    LaunchedEffect(Unit) { reveal.animateTo(1f, tween(900, easing = EaseOutStrong)) }
+    val travel = rememberInfiniteTransition(label = "pulse")
+    val travelX by travel.animateFloat(0f, 1f, infiniteRepeatable(tween(1400, easing = LinearEasing)), label = "travel")
+    val sent = events.count { it.second }
+    val failed = events.size - sent
+    val description = stringResource(R.string.home_pulse_description, sent, failed)
+    Canvas(
+        Modifier
+            .fillMaxWidth()
+            .height(48.dp)
+            .semantics { contentDescription = description }
+    ) {
+        val start = now - 24 * 60 * 60 * 1000L
+        val mid = size.height / 2
+        val beatHalf = 5.dp.toPx()
+        val up = size.height * 0.45f
+        val stroke = 2.dp.toPx()
+        // Beats closer than one beat width merge into the first, so a busy hour stays readable.
+        val beats = mutableListOf<Pair<Float, Boolean>>()
+        events.sortedBy { it.first }.forEach { (time, ok) ->
+            val x = ((time - start).toFloat() / (now - start)).coerceIn(0f, 1f) * size.width
+            val last = beats.lastOrNull()
+            if (last == null || x - last.first > beatHalf * 3) beats += x to ok
+            else if (!ok) beats[beats.lastIndex] = last.first to false
+        }
+        val path = Path().apply {
+            moveTo(0f, mid)
+            beats.forEach { (x, ok) ->
+                val peak = if (ok) mid - up else mid + up * 0.8f
+                val dip = if (ok) mid + up * 0.25f else mid - up * 0.2f
+                lineTo((x - beatHalf * 2).coerceAtLeast(0f), mid)
+                lineTo(x - beatHalf, dip)
+                lineTo(x, peak)
+                lineTo(x + beatHalf, dip)
+                lineTo((x + beatHalf * 2).coerceAtMost(size.width), mid)
+            }
+            lineTo(size.width, mid)
+        }
+        clipRect(right = size.width * reveal.value) {
+            drawPath(path, ink.copy(alpha = 0.9f), style = Stroke(width = stroke, cap = StrokeCap.Round, join = StrokeJoin.Round))
+            beats.filter { !it.second }.forEach { (x, _) ->
+                drawCircle(ink, radius = 3.dp.toPx(), center = Offset(x, mid + up * 0.8f))
+            }
+        }
+        if (active) {
+            drawCircle(ink, radius = 4.dp.toPx(), center = Offset(travelX * size.width, mid))
+        }
+        // The end of the line is now.
+        drawCircle(ink, radius = 3.dp.toPx(), center = Offset(size.width - 3.dp.toPx(), mid))
+    }
+}
+
 @Composable
 private fun HeroStat(value: String, label: String, modifier: Modifier = Modifier) {
     Column(modifier) {
-        Text(value, style = MaterialTheme.typography.titleMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
+        Text(value, style = MaterialTheme.typography.titleMedium.copy(fontFamily = Mono), maxLines = 1, overflow = TextOverflow.Ellipsis)
         Text(label, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.85f))
     }
 }

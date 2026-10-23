@@ -433,4 +433,7 @@
     <string name="webhooks_empty_title">아직 웹훅이 없습니다</string>
     <string name="logs_sync_outbox">보낼 편지함</string>
     <string name="logs_items_count">항목: %1$d</string>
+    <string name="home_pulse_start">24시간 전</string>
+    <string name="home_pulse_end">지금</string>
+    <string name="home_pulse_description">최근 24시간: 전송 %1$d건, 실패 %2$d건</string>
 </resources>

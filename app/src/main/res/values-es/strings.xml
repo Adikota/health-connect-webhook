@@ -433,4 +433,7 @@
     <string name="webhooks_empty_title">Aún no hay webhooks</string>
     <string name="logs_sync_outbox">Pendiente</string>
     <string name="logs_items_count">Elementos: %1$d</string>
+    <string name="home_pulse_start">hace 24 h</string>
+    <string name="home_pulse_end">Ahora</string>
+    <string name="home_pulse_description">Últimas 24 horas: %1$d enviados, %2$d fallidos</string>
 </resources>

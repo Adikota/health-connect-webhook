@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import com.hcwebhook.app.ui.AppSwitch
 import com.hcwebhook.app.ui.Group
 import com.hcwebhook.app.ui.IconBadge
+import com.hcwebhook.app.ui.theme.Mono
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -848,7 +849,7 @@ fun WebhooksScreen(onOpenNotificationsSettings: () -> Unit = {}) {
                             },
                             supportingContent = {
                                 Column {
-                                    Text(config.url, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                                    Text(config.url, style = MaterialTheme.typography.bodyMedium.copy(fontFamily = Mono), maxLines = 1, overflow = TextOverflow.Ellipsis)
                                     Text(meta, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.primary)
                                 }
                             },

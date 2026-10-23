@@ -209,6 +209,7 @@ fun ConfigurationScreen(
                 sentLast24h = logsLast24h.takeIf { it.isNotEmpty() }?.count { it.success },
                 failedLast24h = logsLast24h.takeIf { it.isNotEmpty() }?.count { !it.success },
                 lastSyncTime = lastSyncTime,
+                syncEvents = logsLast24h.map { it.timestamp to it.success },
                 canSync = webhookCount > 0 || isLocalHttpEnabled,
                 onSyncCompleted = {
                     lastSyncTime = preferencesManager.getLastSyncTime()

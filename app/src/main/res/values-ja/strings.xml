@@ -433,4 +433,7 @@
     <string name="webhooks_empty_title">Webhook はまだありません</string>
     <string name="logs_sync_outbox">送信待ち</string>
     <string name="logs_items_count">項目: %1$d</string>
+    <string name="home_pulse_start">24 時間前</string>
+    <string name="home_pulse_end">現在</string>
+    <string name="home_pulse_description">過去 24 時間: 送信 %1$d 件、失敗 %2$d 件</string>
 </resources>

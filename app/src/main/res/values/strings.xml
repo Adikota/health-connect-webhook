@@ -452,6 +452,9 @@
     <string name="webhooks_empty_title">No webhooks yet</string>
     <string name="logs_sync_outbox">Outbox</string>
     <string name="logs_items_count">Items: %1$d</string>
+    <string name="home_pulse_start">24 h ago</string>
+    <string name="home_pulse_end">Now</string>
+    <string name="home_pulse_description">Last 24 hours: %1$d sent, %2$d failed</string>
 </resources>
 
 

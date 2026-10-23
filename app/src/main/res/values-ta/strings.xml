@@ -433,4 +433,7 @@
     <string name="webhooks_empty_title">இன்னும் webhooks இல்லை</string>
     <string name="logs_sync_outbox">அனுப்பக் காத்திருப்பவை</string>
     <string name="logs_items_count">உருப்படிகள்: %1$d</string>
+    <string name="home_pulse_start">24 ம.நே முன்</string>
+    <string name="home_pulse_end">இப்போது</string>
+    <string name="home_pulse_description">கடந்த 24 மணிநேரம்: %1$d அனுப்பப்பட்டன, %2$d தோல்வி</string>
 </resources>
