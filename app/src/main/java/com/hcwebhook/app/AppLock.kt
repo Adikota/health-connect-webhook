@@ -10,15 +10,19 @@ import androidx.fragment.app.FragmentActivity
 
 /**
  * App lock with the device's own screen lock: fingerprint, face, or the PIN, pattern or password.
- * The app keeps no secret of its own. It locks at a cold start and after [GRACE_MS] in the
- * background, so the Health Connect permission screen or the file picker does not lock it.
+ * The app keeps no secret of its own. It asks at a cold start and every time the user comes back
+ * to the app. Screens that the app opens itself (Health Connect permissions, the file picker,
+ * system settings) call [allowNextLeave] first, so coming back from them does not ask again.
  */
 object AppLock {
-    const val GRACE_MS = 60_000L
     private const val AUTHENTICATORS = BIOMETRIC_WEAK or DEVICE_CREDENTIAL
 
     @Volatile private var unlocked = false
     @Volatile private var backgroundedAt: Long? = null
+    /** The system prompt is showing; its PIN screen is another activity, so leaving is expected. */
+    @Volatile private var authenticating = false
+    /** The app opened a screen of its own; coming back from it does not ask. */
+    @Volatile private var leaveAllowed = false
 
     /** True when the device has a screen lock, so app lock can work. */
     fun canUse(context: Context): Boolean =
@@ -31,35 +35,43 @@ object AppLock {
         return locked
     }
 
-    /** Locked when never unlocked in this process, or when away for longer than [GRACE_MS]. */
+    /** Locked when never unlocked in this process, or when the user left the app. */
     internal fun lockedAfter(unlocked: Boolean, backgroundedAt: Long?, now: Long): Boolean =
-        !unlocked || (backgroundedAt != null && now - backgroundedAt > GRACE_MS)
+        !unlocked || backgroundedAt != null
+
+    /** Call before the app opens a screen of its own, such as the Health Connect permissions. */
+    fun allowNextLeave() {
+        leaveAllowed = true
+    }
 
     fun onBackground(now: Long = System.currentTimeMillis()) {
+        if (authenticating || leaveAllowed) return
         backgroundedAt = now
     }
 
-    /**
-     * Call in onStart after [isLocked]: the app is in front again, so the time away ends here.
-     * Without this, a short trip away followed by a long session would lock at the next onStart.
-     */
+    /** Call in onStart after [isLocked]: the app is in front again. */
     fun onForeground() {
         backgroundedAt = null
+        leaveAllowed = false
     }
 
     /** Shows the system prompt. [onResult] gets true when the user unlocked. */
     fun authenticate(activity: FragmentActivity, title: String, onResult: (Boolean) -> Unit) {
+        if (authenticating) return
+        authenticating = true
         val prompt = BiometricPrompt(
             activity,
             ContextCompat.getMainExecutor(activity),
             object : BiometricPrompt.AuthenticationCallback() {
                 override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                    authenticating = false
                     unlocked = true
                     backgroundedAt = null
                     onResult(true)
                 }
 
                 override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                    authenticating = false
                     onResult(false)
                 }
             },

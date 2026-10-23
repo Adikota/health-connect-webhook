@@ -12,14 +12,8 @@ class AppLockTest {
     }
 
     @Test
-    fun staysOpenWithinGrace() {
-        // For example the Health Connect permission screen or the file picker.
-        assertFalse(AppLock.lockedAfter(unlocked = true, backgroundedAt = 1_000, now = 1_000 + AppLock.GRACE_MS))
-    }
-
-    @Test
-    fun locksAfterGrace() {
-        assertTrue(AppLock.lockedAfter(unlocked = true, backgroundedAt = 1_000, now = 1_001 + AppLock.GRACE_MS))
+    fun locksEveryTimeTheUserLeft() {
+        assertTrue(AppLock.lockedAfter(unlocked = true, backgroundedAt = 1_000, now = 1_001))
     }
 
     @Test

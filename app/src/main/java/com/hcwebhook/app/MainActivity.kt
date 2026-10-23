@@ -119,6 +119,18 @@ class MainActivity : AppCompatActivity() {
         if (!isChangingConfigurations) AppLock.onBackground()
     }
 
+    // Screens that the app opens itself (permissions, file picker, settings) do not lock it.
+    override fun startActivity(intent: android.content.Intent?, options: Bundle?) {
+        AppLock.allowNextLeave()
+        super.startActivity(intent, options)
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun startActivityForResult(intent: android.content.Intent, requestCode: Int, options: Bundle?) {
+        AppLock.allowNextLeave()
+        super.startActivityForResult(intent, requestCode, options)
+    }
+
     override fun onNewIntent(intent: android.content.Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
