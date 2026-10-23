@@ -28,6 +28,7 @@ import com.hcwebhook.app.screens.SettingsBackupScreen
 import com.hcwebhook.app.screens.WebhooksScreen
 import com.hcwebhook.app.screens.WhatsNewSheet
 import com.hcwebhook.app.ui.AppearanceState
+import com.hcwebhook.app.ui.LockScreen
 import com.hcwebhook.app.ui.theme.HCWebhookTheme
 import kotlinx.coroutines.launch
 import androidx.compose.ui.res.stringResource
@@ -39,6 +40,7 @@ class MainActivity : AppCompatActivity() {
     internal var permissionStatusCallback: ((Boolean) -> Unit)? = null
     private lateinit var permissionLauncher: androidx.activity.result.ActivityResultLauncher<Set<String>>
     internal val openLocalHttpRequest = mutableStateOf(false)
+    private val locked = mutableStateOf(false)
 
     private fun initializePermissionLauncher() {
         val requestPermissionActivityContract = androidx.health.connect.client.PermissionController.createRequestPermissionResultContract()
@@ -78,8 +80,16 @@ class MainActivity : AppCompatActivity() {
         }
 
         AppearanceState.dynamicColor.value = preferencesManager.isDynamicColor()
+        locked.value = AppLock.isLocked(this)
+        applyRecentsPreview(this)
         setContent {
             HCWebhookTheme(dynamicColor = AppearanceState.dynamicColor.value) {
+                if (locked.value) {
+                    LockScreen(onUnlock = {
+                        AppLock.authenticate(this, getString(R.string.app_lock_prompt_title)) { ok -> if (ok) locked.value = false }
+                    })
+                    return@HCWebhookTheme
+                }
                 var showOnboarding by remember { mutableStateOf(!preferencesManager.hasSeenOnboarding()) }
                 if (showOnboarding) {
                     OnboardingScreen(onFinish = {
@@ -96,6 +106,17 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        locked.value = AppLock.isLocked(this)
+        AppLock.onForeground()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (!isChangingConfigurations) AppLock.onBackground()
     }
 
     override fun onNewIntent(intent: android.content.Intent) {

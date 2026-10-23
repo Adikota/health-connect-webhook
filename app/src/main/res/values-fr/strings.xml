@@ -463,4 +463,11 @@
     <string name="mcp_open_server">Ouvrir</string>
     <string name="mcp_token_note">Le serveur MCP demande toujours le jeton du serveur. Copier la configuration l\'ajoute. Utilisez-le uniquement sur des réseaux de confiance.</string>
     <string name="mcp_copied">Copié</string>
+    <string name="app_lock_title">Verrouillage de l\'app</string>
+    <string name="app_lock_desc">Demander votre empreinte, votre visage ou le verrouillage de l\'écran à l\'ouverture de l\'app.</string>
+    <string name="app_lock_no_credential">Définissez d\'abord un verrouillage de l\'écran sur cet appareil.</string>
+    <string name="app_lock_locked_title">HC Webhook est verrouillée</string>
+    <string name="app_lock_unlock">Déverrouiller</string>
+    <string name="app_lock_prompt_title">Déverrouiller HC Webhook</string>
+    <string name="app_lock_confirm">Confirmez pour activer le verrouillage de l\'app</string>
 </resources>

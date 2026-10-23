@@ -463,4 +463,11 @@
     <string name="mcp_open_server">열기</string>
     <string name="mcp_token_note">MCP 서버에는 항상 서버 토큰이 필요합니다. 설정 복사에 포함됩니다. 신뢰할 수 있는 네트워크에서만 사용하세요.</string>
     <string name="mcp_copied">복사됨</string>
+    <string name="app_lock_title">앱 잠금</string>
+    <string name="app_lock_desc">앱을 열 때 지문, 얼굴 또는 화면 잠금을 요청합니다.</string>
+    <string name="app_lock_no_credential">먼저 이 기기에 화면 잠금을 설정하세요.</string>
+    <string name="app_lock_locked_title">HC Webhook이 잠겨 있습니다</string>
+    <string name="app_lock_unlock">잠금 해제</string>
+    <string name="app_lock_prompt_title">HC Webhook 잠금 해제</string>
+    <string name="app_lock_confirm">앱 잠금을 켜려면 확인하세요</string>
 </resources>

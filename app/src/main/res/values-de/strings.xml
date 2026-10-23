@@ -463,4 +463,11 @@
     <string name="mcp_open_server">Öffnen</string>
     <string name="mcp_token_note">Der MCP-Server braucht immer das Server-Token. „Einrichtung kopieren\" fügt es hinzu. Nutze ihn nur in Netzwerken, denen du vertraust.</string>
     <string name="mcp_copied">Kopiert</string>
+    <string name="app_lock_title">App-Sperre</string>
+    <string name="app_lock_desc">Beim Öffnen der App nach Fingerabdruck, Gesicht oder Displaysperre fragen.</string>
+    <string name="app_lock_no_credential">Richte zuerst eine Displaysperre auf diesem Gerät ein.</string>
+    <string name="app_lock_locked_title">HC Webhook ist gesperrt</string>
+    <string name="app_lock_unlock">Entsperren</string>
+    <string name="app_lock_prompt_title">HC Webhook entsperren</string>
+    <string name="app_lock_confirm">Zum Einschalten der App-Sperre bestätigen</string>
 </resources>

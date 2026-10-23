@@ -12,6 +12,9 @@ import androidx.compose.foundation.verticalScroll
 import android.os.Build
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Hub
+import androidx.compose.material.icons.filled.Lock
+import com.hcwebhook.app.AppLock
+import com.hcwebhook.app.applyRecentsPreview
 import androidx.compose.material.icons.filled.Palette
 import com.hcwebhook.app.ui.AppearanceState
 import com.hcwebhook.app.ui.Group
@@ -130,6 +133,34 @@ fun AboutScreen(
                             onChange = { preferencesManager.setDynamicColor(it) },
                         )
                     }
+                }
+                item {
+                    var appLock by remember { mutableStateOf(preferencesManager.isAppLockEnabled()) }
+                    SwitchRow(
+                        icon = Icons.Filled.Lock,
+                        title = stringResource(R.string.app_lock_title),
+                        summary = stringResource(R.string.app_lock_desc),
+                        checked = appLock,
+                        onChange = { on ->
+                            val activity = context as? androidx.fragment.app.FragmentActivity
+                            if (!on) {
+                                preferencesManager.setAppLockEnabled(false)
+                                appLock = false
+                                activity?.let(::applyRecentsPreview)
+                            } else if (activity == null || !AppLock.canUse(context)) {
+                                Toast.makeText(context, R.string.app_lock_no_credential, Toast.LENGTH_LONG).show()
+                            } else {
+                                // Confirm first, so nobody turns on a lock that they cannot open.
+                                AppLock.authenticate(activity, context.getString(R.string.app_lock_confirm)) { ok ->
+                                    if (ok) {
+                                        preferencesManager.setAppLockEnabled(true)
+                                        appLock = true
+                                        applyRecentsPreview(activity)
+                                    }
+                                }
+                            }
+                        },
+                    )
                 }
                 item {
                     SettingRow(

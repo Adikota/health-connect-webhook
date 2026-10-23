@@ -463,4 +463,11 @@
     <string name="mcp_open_server">開く</string>
     <string name="mcp_token_note">MCP サーバーには常にサーバーのトークンが必要です。「設定をコピー」で追加されます。信頼できるネットワークでのみ使用してください。</string>
     <string name="mcp_copied">コピーしました</string>
+    <string name="app_lock_title">アプリのロック</string>
+    <string name="app_lock_desc">アプリを開くときに指紋、顔、または画面ロックを求めます。</string>
+    <string name="app_lock_no_credential">先にこの端末で画面ロックを設定してください。</string>
+    <string name="app_lock_locked_title">HC Webhook はロックされています</string>
+    <string name="app_lock_unlock">ロック解除</string>
+    <string name="app_lock_prompt_title">HC Webhook のロックを解除</string>
+    <string name="app_lock_confirm">確認してアプリのロックをオンにします</string>
 </resources>

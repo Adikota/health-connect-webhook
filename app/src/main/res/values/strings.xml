@@ -482,6 +482,13 @@
     <string name="mcp_open_server">Open</string>
     <string name="mcp_token_note">The MCP server always needs the server token. Copy setup adds it. Use it only on networks that you trust.</string>
     <string name="mcp_copied">Copied</string>
+    <string name="app_lock_title">App lock</string>
+    <string name="app_lock_desc">Ask for your fingerprint, face or screen lock when you open the app.</string>
+    <string name="app_lock_no_credential">Set a screen lock on this device first.</string>
+    <string name="app_lock_locked_title">HC Webhook is locked</string>
+    <string name="app_lock_unlock">Unlock</string>
+    <string name="app_lock_prompt_title">Unlock HC Webhook</string>
+    <string name="app_lock_confirm">Confirm to turn on app lock</string>
 </resources>
 
 

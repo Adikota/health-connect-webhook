@@ -463,4 +463,11 @@
     <string name="mcp_open_server">திற</string>
     <string name="mcp_token_note">MCP சர்வருக்கு எப்போதும் சர்வர் டோக்கன் தேவை. அமைப்பை நகலெடு அதைச் சேர்க்கும். நம்பகமான நெட்வொர்க்குகளில் மட்டும் பயன்படுத்தவும்.</string>
     <string name="mcp_copied">நகலெடுக்கப்பட்டது</string>
+    <string name="app_lock_title">ஆப் பூட்டு</string>
+    <string name="app_lock_desc">ஆப்பைத் திறக்கும்போது கைரேகை, முகம் அல்லது திரைப் பூட்டைக் கேட்கும்.</string>
+    <string name="app_lock_no_credential">முதலில் இந்தச் சாதனத்தில் திரைப் பூட்டை அமைக்கவும்.</string>
+    <string name="app_lock_locked_title">HC Webhook பூட்டப்பட்டுள்ளது</string>
+    <string name="app_lock_unlock">திற</string>
+    <string name="app_lock_prompt_title">HC Webhook ஐத் திற</string>
+    <string name="app_lock_confirm">ஆப் பூட்டை இயக்க உறுதிசெய்யவும்</string>
 </resources>

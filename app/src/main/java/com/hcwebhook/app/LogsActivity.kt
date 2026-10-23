@@ -1,7 +1,9 @@
 package com.hcwebhook.app
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.mutableStateOf
+import com.hcwebhook.app.ui.LockScreen
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.*
@@ -19,15 +21,26 @@ import com.hcwebhook.app.ui.theme.HCWebhookTheme
 import java.text.SimpleDateFormat
 import java.util.*
 
-class LogsActivity : ComponentActivity() {
+class LogsActivity : AppCompatActivity() {
+
+    private val locked = mutableStateOf(false)
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         AppearanceState.dynamicColor.value = PreferencesManager(this).isDynamicColor()
 
+        locked.value = AppLock.isLocked(this)
+        applyRecentsPreview(this)
         setContent {
             HCWebhookTheme(dynamicColor = AppearanceState.dynamicColor.value) {
+                if (locked.value) {
+                    LockScreen(onUnlock = {
+                        AppLock.authenticate(this, getString(R.string.app_lock_prompt_title)) { ok -> if (ok) locked.value = false }
+                    })
+                    return@HCWebhookTheme
+                }
                 LogsScreen()
             }
         }
@@ -189,5 +202,16 @@ class LogsActivity : ComponentActivity() {
     private fun formatTimestamp(timestamp: Long): String {
         val sdf = SimpleDateFormat("MMM dd, yyyy HH:mm:ss", Locale.getDefault())
         return sdf.format(Date(timestamp))
+    }
+
+    override fun onStart() {
+        super.onStart()
+        locked.value = AppLock.isLocked(this)
+        AppLock.onForeground()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (!isChangingConfigurations) AppLock.onBackground()
     }
 }

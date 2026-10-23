@@ -463,4 +463,11 @@
     <string name="mcp_open_server">Apri</string>
     <string name="mcp_token_note">Il server MCP richiede sempre il token del server. Copia configurazione lo aggiunge. Usalo solo su reti di cui ti fidi.</string>
     <string name="mcp_copied">Copiato</string>
+    <string name="app_lock_title">Blocco app</string>
+    <string name="app_lock_desc">Chiedi impronta, volto o blocco schermo quando apri l\'app.</string>
+    <string name="app_lock_no_credential">Imposta prima un blocco schermo su questo dispositivo.</string>
+    <string name="app_lock_locked_title">HC Webhook è bloccata</string>
+    <string name="app_lock_unlock">Sblocca</string>
+    <string name="app_lock_prompt_title">Sblocca HC Webhook</string>
+    <string name="app_lock_confirm">Conferma per attivare il blocco app</string>
 </resources>

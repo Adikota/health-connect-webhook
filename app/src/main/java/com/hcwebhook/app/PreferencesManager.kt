@@ -22,6 +22,7 @@ class PreferencesManager(context: Context) {
         private const val KEY_BUCKET_DEDUP = "bucket_dedup"
         private const val KEY_DYNAMIC_COLOR = "dynamic_color"
         private const val KEY_MCP_ENABLED = "mcp_enabled"
+        private const val KEY_APP_LOCK = "app_lock"
         private const val KEY_MCP_SYNC_ALLOWED = "mcp_sync_allowed"
         private const val KEY_CHANGES_TOKEN_PREFIX = "changes_token_"
         private const val KEY_LAST_STEPS_SYNC_TS = "last_steps_sync_ts"
@@ -372,6 +373,13 @@ class PreferencesManager(context: Context) {
 
     fun setBucketDedup(enabled: Boolean) {
         prefs.edit().putBoolean(KEY_BUCKET_DEDUP, enabled).apply()
+    }
+
+    /** Ask for the device screen lock when the app opens (see [AppLock]). */
+    fun isAppLockEnabled(): Boolean = prefs.getBoolean(KEY_APP_LOCK, false)
+
+    fun setAppLockEnabled(enabled: Boolean) {
+        prefs.edit().putBoolean(KEY_APP_LOCK, enabled).apply()
     }
 
     /** MCP server on the local HTTP server, at /mcp. Off until the user turns it on. */
