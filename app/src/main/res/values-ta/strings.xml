@@ -413,4 +413,24 @@
     <string name="logs_filter_delivery">அனுப்புதல்</string>
     <string name="config_bucket_dedup_title">ஒன்றுக்கொன்று மேலெழும் ஆப்களை ஒருமுறை மட்டும் எண்ணு</string>
     <string name="config_bucket_dedup_hint">தினசரி மொத்தங்களைப் போல Health Connect இல் உள்ள ஆப் முன்னுரிமையைப் பயன்படுத்துகிறது. உங்கள் முதல் ஆப் நாளுக்கு ஒரு பதிவை எழுதினால், அதன் மொத்தம் மணிநேரங்களுக்கு சமமாகப் பிரிக்கப்படும்.</string>
+    <string name="home_hero_never">இல்லை</string>
+    <string name="home_hero_last_sync">கடைசி ஒத்திசைவு</string>
+    <string name="home_hero_sent">அனுப்பியவை, 24 ம.நே</string>
+    <string name="home_hero_failed">தோல்வி, 24 ம.நே</string>
+    <string name="home_status_setup">அமைப்பு முடியவில்லை</string>
+    <string name="home_status_no_target">தொடங்க ஒரு webhook ஐச் சேர்க்கவும்</string>
+    <string name="home_status_manual">கைமுறை ஒத்திசைவு மட்டும்</string>
+    <string name="home_status_on">ஒத்திசைவு இயக்கத்தில்</string>
+    <string name="home_status_no_times">ஒத்திசைவு நேரங்கள் இல்லை</string>
+    <string name="home_status_subtitle">Webhooks: %1$d · தரவு வகைகள்: %2$d</string>
+    <string name="home_section_sync">ஒத்திசைவு</string>
+    <string name="home_schedule_every">ஒவ்வொரு %1$d நிமி.</string>
+    <string name="home_missing_perms_title">சில தரவு வகைகளுக்கு அணுகல் தேவை</string>
+    <string name="home_missing_perms_desc">நீங்கள் அணுகலை அனுமதிக்கும் வரை ஆப் இந்த தரவு வகைகளைப் படிக்க முடியாது.</string>
+    <string name="battery_toast_open_failed">பேட்டரி அமைப்புகளைத் திறக்க முடியவில்லை. சாதன அமைப்புகளில் இந்த ஆப்பிற்கான பேட்டரி மேம்படுத்தலை அணைக்கவும்.</string>
+    <string name="settings_dynamic_color_title">வால்பேப்பர் நிறங்கள்</string>
+    <string name="settings_dynamic_color_desc">உங்கள் வால்பேப்பரின் நிறங்களைப் பயன்படுத்து</string>
+    <string name="webhooks_empty_title">இன்னும் webhooks இல்லை</string>
+    <string name="logs_sync_outbox">அனுப்பக் காத்திருப்பவை</string>
+    <string name="logs_items_count">உருப்படிகள்: %1$d</string>
 </resources>

@@ -413,4 +413,24 @@
     <string name="logs_filter_delivery">送信</string>
     <string name="config_bucket_dedup_title">重複するアプリを一度だけ数える</string>
     <string name="config_bucket_dedup_hint">日ごとの合計と同じく、Health Connect のアプリの優先順位を使います。最優先のアプリが 1 日 1 件のレコードを書く場合、その合計は各時間に均等に配分されます。</string>
+    <string name="home_hero_never">なし</string>
+    <string name="home_hero_last_sync">前回の同期</string>
+    <string name="home_hero_sent">送信 (24 時間)</string>
+    <string name="home_hero_failed">失敗 (24 時間)</string>
+    <string name="home_status_setup">設定が完了していません</string>
+    <string name="home_status_no_target">Webhook を追加して開始</string>
+    <string name="home_status_manual">手動同期のみ</string>
+    <string name="home_status_on">同期はオンです</string>
+    <string name="home_status_no_times">同期時刻が未設定</string>
+    <string name="home_status_subtitle">Webhook: %1$d · データタイプ: %2$d</string>
+    <string name="home_section_sync">同期</string>
+    <string name="home_schedule_every">%1$d 分ごと</string>
+    <string name="home_missing_perms_title">一部のデータタイプにアクセス許可が必要です</string>
+    <string name="home_missing_perms_desc">アクセスを許可するまで、アプリはこれらのデータタイプを読み取れません。</string>
+    <string name="battery_toast_open_failed">バッテリー設定を開けません。端末の設定で、このアプリのバッテリー最適化をオフにしてください。</string>
+    <string name="settings_dynamic_color_title">壁紙の色</string>
+    <string name="settings_dynamic_color_desc">壁紙の色を使用します</string>
+    <string name="webhooks_empty_title">Webhook はまだありません</string>
+    <string name="logs_sync_outbox">送信待ち</string>
+    <string name="logs_items_count">項目: %1$d</string>
 </resources>

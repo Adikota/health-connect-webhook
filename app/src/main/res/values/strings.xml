@@ -432,6 +432,26 @@
     <string name="sync_service_notification_text">Sending data to your configured webhooks</string>
     <string name="config_bucket_dedup_title">Count overlapping apps once</string>
     <string name="config_bucket_dedup_hint">Uses the app priority in Health Connect, like daily totals. If your top app writes one record per day, its total is spread evenly over the hours.</string>
+    <string name="home_hero_never">Never</string>
+    <string name="home_hero_last_sync">Last sync</string>
+    <string name="home_hero_sent">Sent, 24 h</string>
+    <string name="home_hero_failed">Failed, 24 h</string>
+    <string name="home_status_setup">Setup is not complete</string>
+    <string name="home_status_no_target">Add a webhook to start</string>
+    <string name="home_status_manual">Manual sync only</string>
+    <string name="home_status_on">Sync is on</string>
+    <string name="home_status_no_times">No sync times set</string>
+    <string name="home_status_subtitle">Webhooks: %1$d · Data types: %2$d</string>
+    <string name="home_section_sync">Sync</string>
+    <string name="home_schedule_every">Every %1$d min</string>
+    <string name="home_missing_perms_title">Some data types need access</string>
+    <string name="home_missing_perms_desc">The app cannot read these data types until you allow access.</string>
+    <string name="battery_toast_open_failed">Cannot open the battery settings. Turn off battery optimization for this app in the device settings.</string>
+    <string name="settings_dynamic_color_title">Wallpaper colors</string>
+    <string name="settings_dynamic_color_desc">Use the colors of your wallpaper</string>
+    <string name="webhooks_empty_title">No webhooks yet</string>
+    <string name="logs_sync_outbox">Outbox</string>
+    <string name="logs_items_count">Items: %1$d</string>
 </resources>
 
 

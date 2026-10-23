@@ -14,6 +14,13 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.SettingsEthernet
+import androidx.compose.material.icons.filled.Webhook
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.text.style.TextAlign
+import com.hcwebhook.app.ui.AppSwitch
+import com.hcwebhook.app.ui.Group
+import com.hcwebhook.app.ui.IconBadge
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -736,130 +743,130 @@ fun WebhooksScreen(onOpenNotificationsSettings: () -> Unit = {}) {
     }
 
     // ── Main List ─────────────────────────────────────────────────────────────
-    Scaffold(contentWindowInsets = WindowInsets(0.dp)) { padding ->
+    var showAddSheet by remember { mutableStateOf(false) }
+    if (showAddSheet) {
+        ModalBottomSheet(onDismissRequest = { showAddSheet = false; newUrl = "" }) {
+            Column(
+                modifier = Modifier.fillMaxWidth().padding(start = 24.dp, end = 24.dp, bottom = 32.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                Text(stringResource(R.string.webhooks_action_add), style = MaterialTheme.typography.titleLarge)
+                OutlinedTextField(
+                    value = newUrl,
+                    onValueChange = { newUrl = it },
+                    label = { Text(stringResource(R.string.webhooks_new_url_label)) },
+                    placeholder = { Text("https://") },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri),
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
+                )
+                Button(
+                    onClick = {
+                        if (newUrl.isNotBlank() && (newUrl.startsWith("http://") || newUrl.startsWith("https://"))) {
+                            webhookConfigs = webhookConfigs + WebhookConfig.fromUrl(newUrl.trim())
+                            newUrl = ""
+                            showAddSheet = false
+                        } else {
+                            Toast.makeText(context, context.getString(R.string.webhooks_toast_invalid_url), Toast.LENGTH_SHORT).show()
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth().height(48.dp)
+                ) {
+                    Text(stringResource(R.string.webhooks_action_add))
+                }
+            }
+        }
+    }
+
+    Scaffold(
+        contentWindowInsets = WindowInsets(0.dp),
+        floatingActionButton = {
+            if (webhookConfigs.isNotEmpty()) {
+                ExtendedFloatingActionButton(
+                    onClick = { showAddSheet = true },
+                    icon = { Icon(Icons.Filled.Add, null) },
+                    text = { Text(stringResource(R.string.webhooks_action_add)) },
+                )
+            }
+        },
+    ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(16.dp)
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 16.dp)
+                .padding(bottom = 96.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Card {
-                Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                stringResource(R.string.nav_webhooks),
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(start = 8.dp, top = 24.dp, bottom = 4.dp),
+            )
+
+            if (webhookConfigs.isEmpty()) {
+                Column(
+                    Modifier.fillMaxWidth().padding(vertical = 48.dp, horizontal = 24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    IconBadge(Icons.Filled.Webhook, size = 72.dp)
+                    Spacer(Modifier.height(20.dp))
+                    Text(stringResource(R.string.webhooks_empty_title), style = MaterialTheme.typography.titleLarge)
+                    Spacer(Modifier.height(8.dp))
                     Text(
-                        stringResource(R.string.webhooks_section_title),
-                        style = MaterialTheme.typography.titleMedium
+                        stringResource(R.string.webhooks_empty_desc),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Center,
                     )
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    if (webhookConfigs.isEmpty()) {
-                        Text(
-                            stringResource(R.string.webhooks_empty_desc),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                    }
-
-                    webhookConfigs.forEachIndexed { index, config ->
-                        Column {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 10.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Column(modifier = Modifier.weight(1f).padding(end = 8.dp)) {
-                                    val baseAlpha = if (config.isEnabled) 1f else 0.4f
-                                    if (config.name.isNotBlank()) {
-                                        Text(
-                                            text = config.name,
-                                            style = MaterialTheme.typography.bodyMedium,
-                                            fontWeight = FontWeight.Medium,
-                                            maxLines = 1,
-                                            overflow = TextOverflow.Ellipsis,
-                                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = baseAlpha)
-                                        )
-                                    }
-                                    Text(
-                                        text = config.url,
-                                        style = if (config.name.isNotBlank()) MaterialTheme.typography.bodySmall else MaterialTheme.typography.bodyMedium,
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis,
-                                        color = if (config.name.isNotBlank())
-                                            MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = baseAlpha)
-                                        else
-                                            MaterialTheme.colorScheme.onSurface.copy(alpha = baseAlpha)
-                                    )
-                                    val meta = buildList {
-                                        val h = config.getHeaderCount()
-                                        val f = config.dataTypeFilter?.size
-                                        if (config.deliveryFormat == WebhookDeliveryFormat.GRPC) {
-                                            add(stringResource(R.string.webhooks_delivery_grpc))
-                                        }
-                                        if (h > 0) add(stringResource(R.string.webhooks_headers_count, h))
-                                        if (f != null) add(stringResource(R.string.webhooks_data_types_filter_count, f))
-                                    }.joinToString(" · ")
-                                    if (meta.isNotEmpty()) {
-                                        Text(
-                                            text = meta,
-                                            style = MaterialTheme.typography.labelSmall,
-                                            color = MaterialTheme.colorScheme.primary.copy(
-                                                alpha = if (config.isEnabled) 1f else 0.4f
-                                            )
-                                        )
-                                    }
-                                }
-
-                                Box(modifier = Modifier.graphicsLayer(scaleX = 0.75f, scaleY = 0.75f)) {
-                                    Switch(
-                                        checked = config.isEnabled,
-                                        onCheckedChange = { enabled ->
-                                            val updated = webhookConfigs.toMutableList()
-                                            updated[index] = config.copy(isEnabled = enabled)
-                                            webhookConfigs = updated
-                                        }
-                                    )
-                                }
-
-                                IconButton(
-                                    onClick = { sheetIndex = index },
-                                    modifier = Modifier.size(36.dp)
-                                ) {
-                                    Icon(
-                                        Icons.Filled.Edit,
-                                        contentDescription = stringResource(R.string.webhooks_action_edit_headers),
-                                        modifier = Modifier.size(18.dp)
-                                    )
-                                }
-                            }
-                            HorizontalDivider()
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    OutlinedTextField(
-                        value = newUrl,
-                        onValueChange = { newUrl = it },
-                        label = { Text(stringResource(R.string.webhooks_new_url_label)) },
-                        modifier = Modifier.fillMaxWidth(),
-                        singleLine = true
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Button(
-                        onClick = {
-                            if (newUrl.isNotBlank() && (newUrl.startsWith("http://") || newUrl.startsWith("https://"))) {
-                                webhookConfigs = webhookConfigs + WebhookConfig.fromUrl(newUrl)
-                                newUrl = ""
-                            } else {
-                                Toast.makeText(context, context.getString(R.string.webhooks_toast_invalid_url), Toast.LENGTH_SHORT).show()
-                            }
-                        },
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
+                    Spacer(Modifier.height(24.dp))
+                    Button(onClick = { showAddSheet = true }) {
+                        Icon(Icons.Filled.Add, null, Modifier.size(18.dp))
+                        Spacer(Modifier.width(8.dp))
                         Text(stringResource(R.string.webhooks_action_add))
+                    }
+                }
+            }
+
+            Group {
+                webhookConfigs.forEachIndexed { index, config ->
+                    item {
+                        val host = remember(config.url) {
+                            try { java.net.URI(config.url).host?.takeIf { it.isNotEmpty() } ?: config.url } catch (_: Exception) { config.url }
+                        }
+                        val meta = buildList {
+                            val h = config.getHeaderCount()
+                            val f = config.dataTypeFilter?.size
+                            add(stringResource(if (config.deliveryFormat == WebhookDeliveryFormat.GRPC) R.string.webhooks_delivery_grpc else R.string.webhooks_delivery_json))
+                            if (h > 0) add(stringResource(R.string.webhooks_headers_count, h))
+                            if (f != null) add(stringResource(R.string.webhooks_data_types_filter_count, f))
+                        }.joinToString(" · ")
+                        ListItem(
+                            headlineContent = {
+                                Text(config.name.ifBlank { host }, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                            },
+                            supportingContent = {
+                                Column {
+                                    Text(config.url, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                                    Text(meta, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.primary)
+                                }
+                            },
+                            leadingContent = {
+                                IconBadge(if (config.deliveryFormat == WebhookDeliveryFormat.GRPC) Icons.Filled.SettingsEthernet else Icons.Filled.Webhook)
+                            },
+                            trailingContent = {
+                                AppSwitch(config.isEnabled) { enabled ->
+                                    val updated = webhookConfigs.toMutableList()
+                                    updated[index] = config.copy(isEnabled = enabled)
+                                    webhookConfigs = updated
+                                }
+                            },
+                            colors = ListItemDefaults.colors(containerColor = androidx.compose.ui.graphics.Color.Transparent),
+                            modifier = Modifier
+                                .clickable { sheetIndex = index }
+                                .alpha(if (config.isEnabled) 1f else 0.6f),
+                        )
                     }
                 }
             }

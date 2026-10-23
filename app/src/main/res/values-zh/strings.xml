@@ -413,4 +413,24 @@
     <string name="logs_filter_delivery">发送</string>
     <string name="config_bucket_dedup_title">重叠的应用只计算一次</string>
     <string name="config_bucket_dedup_hint">与每日总计一样，使用 Health Connect 中的应用优先级。如果最优先的应用每天只写入一条记录，其总数会平均分配到各个小时。</string>
+    <string name="home_hero_never">从未</string>
+    <string name="home_hero_last_sync">上次同步</string>
+    <string name="home_hero_sent">已发送，24 小时</string>
+    <string name="home_hero_failed">失败，24 小时</string>
+    <string name="home_status_setup">设置未完成</string>
+    <string name="home_status_no_target">添加 Webhook 以开始</string>
+    <string name="home_status_manual">仅手动同步</string>
+    <string name="home_status_on">同步已开启</string>
+    <string name="home_status_no_times">未设置同步时间</string>
+    <string name="home_status_subtitle">Webhook：%1$d · 数据类型：%2$d</string>
+    <string name="home_section_sync">同步</string>
+    <string name="home_schedule_every">每 %1$d 分钟</string>
+    <string name="home_missing_perms_title">部分数据类型需要访问权限</string>
+    <string name="home_missing_perms_desc">在您允许访问之前，应用无法读取这些数据类型。</string>
+    <string name="battery_toast_open_failed">无法打开电池设置。请在设备设置中关闭此应用的电池优化。</string>
+    <string name="settings_dynamic_color_title">壁纸颜色</string>
+    <string name="settings_dynamic_color_desc">使用壁纸的颜色</string>
+    <string name="webhooks_empty_title">还没有 Webhook</string>
+    <string name="logs_sync_outbox">待发送</string>
+    <string name="logs_items_count">项目：%1$d</string>
 </resources>

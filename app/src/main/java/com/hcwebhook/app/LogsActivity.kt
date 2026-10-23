@@ -14,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.hcwebhook.app.ui.AppearanceState
 import com.hcwebhook.app.ui.theme.HCWebhookTheme
 import java.text.SimpleDateFormat
 import java.util.*
@@ -23,9 +24,10 @@ class LogsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        AppearanceState.dynamicColor.value = PreferencesManager(this).isDynamicColor()
 
         setContent {
-            HCWebhookTheme {
+            HCWebhookTheme(dynamicColor = AppearanceState.dynamicColor.value) {
                 LogsScreen()
             }
         }

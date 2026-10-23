@@ -9,7 +9,13 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import android.os.Build
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Palette
+import com.hcwebhook.app.ui.AppearanceState
+import com.hcwebhook.app.ui.Group
+import com.hcwebhook.app.ui.SettingRow
+import com.hcwebhook.app.ui.SwitchRow
 import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.automirrored.filled.Notes
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
@@ -80,88 +86,117 @@ fun AboutScreen(
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp),
         ) {
-            SectionLabel(stringResource(R.string.settings_section_sync))
-            SettingsGroup {
-                SettingsRow(
-                    icon = Icons.Filled.Lan,
-                    title = stringResource(R.string.about_local_http_title),
-                    subtitle = if (localHttpEnabled) {
-                        stringResource(R.string.settings_local_http_on, localHttpPort)
-                    } else {
-                        stringResource(R.string.settings_local_http_off)
-                    },
-                    onClick = onOpenLocalHttpSettings,
-                )
-                RowDivider()
-                SettingsRow(
-                    icon = Icons.Filled.Notifications,
-                    title = stringResource(R.string.about_notifications_title),
-                    subtitle = stringResource(R.string.about_notifications_desc),
-                    onClick = onOpenNotificationsSettings,
-                )
-                RowDivider()
-                TimestampStyleRow(preferencesManager)
-            }
-
-            SectionLabel(stringResource(R.string.settings_section_app))
-            SettingsGroup {
-                LanguageRow()
-                RowDivider()
-                SettingsRow(
-                    icon = Icons.Filled.Backup,
-                    title = stringResource(R.string.about_settings_backup_title),
-                    subtitle = stringResource(R.string.about_settings_backup_desc),
-                    onClick = onOpenSettingsBackup,
-                )
-            }
-
-            SectionLabel(stringResource(R.string.settings_section_help))
-            SettingsGroup {
-                SettingsRow(
-                    icon = Icons.AutoMirrored.Filled.Notes,
-                    title = stringResource(R.string.about_link_changelog),
-                    subtitle = stringResource(R.string.about_link_changelog_desc),
-                    onClick = onOpenChangelog,
-                )
-                RowDivider()
-                SettingsRow(
-                    icon = Icons.AutoMirrored.Filled.Chat,
-                    title = stringResource(R.string.about_link_feedback),
-                    subtitle = stringResource(R.string.about_feedback_desc),
-                    onClick = { showFeedbackSheet = true },
-                )
-                RowDivider()
-                SettingsRow(
-                    icon = Icons.Filled.PlayArrow,
-                    title = stringResource(R.string.about_link_intro),
-                    onClick = onRestartOnboarding,
-                )
-                if (!FlavorUtils.isPlayStore) {
-                    RowDivider()
-                    SettingsRow(
-                        icon = Icons.Filled.Code,
-                        title = stringResource(R.string.about_link_github),
-                        trailingIcon = Icons.AutoMirrored.Filled.OpenInNew,
-                        onClick = {
-                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/mcnaveen/health-connect-webhook"))
-                            context.startActivity(intent)
+            Text(
+                stringResource(R.string.nav_about),
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(start = 8.dp, top = 8.dp, bottom = 12.dp),
+            )
+            Group(title = stringResource(R.string.settings_section_sync)) {
+                item {
+                    SettingRow(
+                        icon = Icons.Filled.Lan,
+                        title = stringResource(R.string.about_local_http_title),
+                        summary = if (localHttpEnabled) {
+                            stringResource(R.string.settings_local_http_on, localHttpPort)
+                        } else {
+                            stringResource(R.string.settings_local_http_off)
                         },
+                        chevron = true,
+                        onClick = onOpenLocalHttpSettings,
+                    )
+                }
+                item {
+                    SettingRow(
+                        icon = Icons.Filled.Notifications,
+                        title = stringResource(R.string.about_notifications_title),
+                        summary = stringResource(R.string.about_notifications_desc),
+                        chevron = true,
+                        onClick = onOpenNotificationsSettings,
+                    )
+                }
+                item { TimestampStyleRow(preferencesManager) }
+            }
+
+            Group(title = stringResource(R.string.settings_section_app), modifier = Modifier.padding(top = 20.dp)) {
+                item { LanguageRow() }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    item {
+                        SwitchRow(
+                            icon = Icons.Filled.Palette,
+                            title = stringResource(R.string.settings_dynamic_color_title),
+                            summary = stringResource(R.string.settings_dynamic_color_desc),
+                            checked = AppearanceState.dynamicColor.value,
+                            onChange = { preferencesManager.setDynamicColor(it) },
+                        )
+                    }
+                }
+                item {
+                    SettingRow(
+                        icon = Icons.Filled.Backup,
+                        title = stringResource(R.string.about_settings_backup_title),
+                        summary = stringResource(R.string.about_settings_backup_desc),
+                        chevron = true,
+                        onClick = onOpenSettingsBackup,
                     )
                 }
             }
 
-            SectionLabel(stringResource(R.string.settings_section_about))
-            SettingsGroup {
-                TextBlock(
-                    title = stringResource(R.string.about_privacy_title),
-                    // One bullet per line instead of one long paragraph.
-                    body = stringResource(R.string.about_privacy_desc).replace(" • ", "\n• "),
-                )
-                RowDivider(startPadding = 16.dp)
-                TextBlock(
-                    title = stringResource(R.string.medical_disclaimer_title),
-                    body = stringResource(R.string.medical_disclaimer_desc),
-                )
+            Group(title = stringResource(R.string.settings_section_help), modifier = Modifier.padding(top = 20.dp)) {
+                item {
+                    SettingRow(
+                        icon = Icons.AutoMirrored.Filled.Notes,
+                        title = stringResource(R.string.about_link_changelog),
+                        summary = stringResource(R.string.about_link_changelog_desc),
+                        chevron = true,
+                        onClick = onOpenChangelog,
+                    )
+                }
+                item {
+                    SettingRow(
+                        icon = Icons.AutoMirrored.Filled.Chat,
+                        title = stringResource(R.string.about_link_feedback),
+                        summary = stringResource(R.string.about_feedback_desc),
+                        chevron = true,
+                        onClick = { showFeedbackSheet = true },
+                    )
+                }
+                item {
+                    SettingRow(
+                        icon = Icons.Filled.PlayArrow,
+                        title = stringResource(R.string.about_link_intro),
+                        chevron = true,
+                        onClick = onRestartOnboarding,
+                    )
+                }
+                if (!FlavorUtils.isPlayStore) {
+                    item {
+                        SettingRow(
+                            icon = Icons.Filled.Code,
+                            title = stringResource(R.string.about_link_github),
+                            trailing = { Icon(Icons.AutoMirrored.Filled.OpenInNew, null, tint = MaterialTheme.colorScheme.onSurfaceVariant) },
+                            onClick = {
+                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/mcnaveen/health-connect-webhook"))
+                                context.startActivity(intent)
+                            },
+                        )
+                    }
+                }
+            }
+
+            Group(title = stringResource(R.string.settings_section_about), modifier = Modifier.padding(top = 20.dp)) {
+                item {
+                    TextBlock(
+                        title = stringResource(R.string.about_privacy_title),
+                        // One bullet per line instead of one long paragraph.
+                        body = stringResource(R.string.about_privacy_desc).replace(" • ", "\n• "),
+                    )
+                }
+                item {
+                    TextBlock(
+                        title = stringResource(R.string.medical_disclaimer_title),
+                        body = stringResource(R.string.medical_disclaimer_desc),
+                    )
+                }
             }
 
             // ── Version footer ───────────────────────────────────────────────
@@ -214,99 +249,6 @@ fun AboutScreen(
     }
 }
 
-// Two text sizes only: bodyLarge for row titles, bodyMedium for everything else.
-// Section labels and block titles differ by weight, not size.
-
-@Composable
-private fun SectionLabel(text: String) {
-    Text(
-        text = text,
-        style = MaterialTheme.typography.bodyMedium,
-        fontWeight = FontWeight.SemiBold,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-        modifier = Modifier.padding(start = 16.dp, top = 20.dp, bottom = 8.dp),
-    )
-}
-
-@Composable
-private fun SettingsGroup(content: @Composable ColumnScope.() -> Unit) {
-    Card(
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-        ),
-    ) {
-        Column(content = content)
-    }
-}
-
-@Composable
-private fun RowDivider(startPadding: androidx.compose.ui.unit.Dp = 56.dp) {
-    // Starts under the text, not the icon.
-    HorizontalDivider(
-        modifier = Modifier.padding(start = startPadding),
-        color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
-    )
-}
-
-@Composable
-private fun SettingsRow(
-    icon: ImageVector,
-    title: String,
-    onClick: () -> Unit,
-    subtitle: String? = null,
-    value: String? = null,
-    trailingIcon: ImageVector? = Icons.Filled.ChevronRight,
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .heightIn(min = 56.dp)
-            .padding(horizontal = 16.dp, vertical = 12.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.size(24.dp),
-        )
-        Spacer(modifier = Modifier.width(16.dp))
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurface,
-            )
-            if (subtitle != null) {
-                Spacer(modifier = Modifier.height(2.dp))
-                Text(
-                    text = subtitle,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
-        }
-        if (value != null) {
-            Spacer(modifier = Modifier.width(12.dp))
-            Text(
-                text = value,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.primary,
-            )
-        }
-        if (trailingIcon != null) {
-            Spacer(modifier = Modifier.width(8.dp))
-            Icon(
-                imageVector = trailingIcon,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.size(20.dp),
-            )
-        }
-    }
-}
-
 @Composable
 private fun TextBlock(title: String, body: String) {
     Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp)) {
@@ -337,16 +279,15 @@ private fun TimestampStyleRow(preferencesManager: PreferencesManager) {
     }
 
     Box {
-        SettingsRow(
+        SettingRow(
             icon = Icons.Filled.Schedule,
             title = stringResource(R.string.settings_timestamps_title),
-            subtitle = stringResource(
+            summary = stringResource(
                 R.string.settings_timestamps_example,
                 time.format(Instant.now().truncatedTo(ChronoUnit.SECONDS)),
                 time.timezoneName,
             ),
             value = stringResource(label(style)),
-            trailingIcon = null,
             onClick = { expanded = true },
         )
         DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
@@ -395,11 +336,10 @@ private fun LanguageRow() {
     val currentName = languages.firstOrNull { it.first == currentTag }?.second ?: systemDefault
 
     Box {
-        SettingsRow(
+        SettingRow(
             icon = Icons.Filled.Translate,
             title = stringResource(R.string.settings_language_title),
             value = currentName,
-            trailingIcon = null,
             onClick = { expanded = true },
         )
         DropdownMenu(

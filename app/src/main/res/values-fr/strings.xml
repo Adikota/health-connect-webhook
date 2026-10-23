@@ -413,4 +413,24 @@
     <string name="logs_filter_delivery">Envoi</string>
     <string name="config_bucket_dedup_title">Compter une seule fois les apps qui se chevauchent</string>
     <string name="config_bucket_dedup_hint">Utilise la priorité des apps dans Health Connect, comme les totaux journaliers. Si votre app principale écrit un relevé par jour, son total est réparti également sur les heures.</string>
+    <string name="home_hero_never">Jamais</string>
+    <string name="home_hero_last_sync">Dernière synchro</string>
+    <string name="home_hero_sent">Envoyés, 24 h</string>
+    <string name="home_hero_failed">Échecs, 24 h</string>
+    <string name="home_status_setup">Configuration incomplète</string>
+    <string name="home_status_no_target">Ajoutez un webhook pour commencer</string>
+    <string name="home_status_manual">Synchro manuelle uniquement</string>
+    <string name="home_status_on">Synchro activée</string>
+    <string name="home_status_no_times">Aucune heure de synchro</string>
+    <string name="home_status_subtitle">Webhooks : %1$d · Types de données : %2$d</string>
+    <string name="home_section_sync">Synchro</string>
+    <string name="home_schedule_every">Toutes les %1$d min</string>
+    <string name="home_missing_perms_title">Certains types de données demandent un accès</string>
+    <string name="home_missing_perms_desc">L\'app ne peut pas lire ces types de données tant que vous n\'autorisez pas l\'accès.</string>
+    <string name="battery_toast_open_failed">Impossible d\'ouvrir les paramètres de batterie. Désactivez l\'optimisation de batterie pour cette app dans les paramètres de l\'appareil.</string>
+    <string name="settings_dynamic_color_title">Couleurs du fond d\'écran</string>
+    <string name="settings_dynamic_color_desc">Utiliser les couleurs de votre fond d\'écran</string>
+    <string name="webhooks_empty_title">Aucun webhook pour le moment</string>
+    <string name="logs_sync_outbox">En attente</string>
+    <string name="logs_items_count">Éléments : %1$d</string>
 </resources>

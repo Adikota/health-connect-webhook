@@ -413,4 +413,24 @@
     <string name="logs_filter_delivery">Übertragung</string>
     <string name="config_bucket_dedup_title">Überlappende Apps nur einmal zählen</string>
     <string name="config_bucket_dedup_hint">Nutzt die App-Priorität in Health Connect, wie bei Tagessummen. Schreibt deine oberste App einen Eintrag pro Tag, wird ihre Summe gleichmäßig auf die Stunden verteilt.</string>
+    <string name="home_hero_never">Nie</string>
+    <string name="home_hero_last_sync">Letzter Sync</string>
+    <string name="home_hero_sent">Gesendet, 24 h</string>
+    <string name="home_hero_failed">Fehler, 24 h</string>
+    <string name="home_status_setup">Einrichtung nicht fertig</string>
+    <string name="home_status_no_target">Füge einen Webhook hinzu</string>
+    <string name="home_status_manual">Nur manueller Sync</string>
+    <string name="home_status_on">Sync ist an</string>
+    <string name="home_status_no_times">Keine Sync-Zeiten</string>
+    <string name="home_status_subtitle">Webhooks: %1$d · Datentypen: %2$d</string>
+    <string name="home_section_sync">Sync</string>
+    <string name="home_schedule_every">Alle %1$d Min.</string>
+    <string name="home_missing_perms_title">Einige Datentypen brauchen Zugriff</string>
+    <string name="home_missing_perms_desc">Die App kann diese Datentypen erst lesen, wenn du den Zugriff erlaubst.</string>
+    <string name="battery_toast_open_failed">Die Akku-Einstellungen lassen sich nicht öffnen. Schalte die Akku-Optimierung für diese App in den Geräteeinstellungen aus.</string>
+    <string name="settings_dynamic_color_title">Farben des Hintergrunds</string>
+    <string name="settings_dynamic_color_desc">Farben deines Hintergrundbilds verwenden</string>
+    <string name="webhooks_empty_title">Noch keine Webhooks</string>
+    <string name="logs_sync_outbox">Warteschlange</string>
+    <string name="logs_items_count">Einträge: %1$d</string>
 </resources>

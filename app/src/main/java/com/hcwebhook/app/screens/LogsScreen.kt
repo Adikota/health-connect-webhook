@@ -7,11 +7,15 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import com.hcwebhook.app.ui.GroupItem
+import com.hcwebhook.app.ui.IconBadge
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Delete
@@ -679,9 +683,11 @@ fun LogsScreen() {
                     modifier = Modifier.fillMaxSize(),
                     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp)
                 ) {
-                    items(filtered, key = { it.id }) { log ->
-                        LogRow(log = log, webhookName = urlToName[log.url], onClick = { detailLog = log })
-                        HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.2f))
+                    itemsIndexed(filtered, key = { _, log -> log.id }) { index, log ->
+                        GroupItem(index, filtered.size) {
+                            LogRow(log = log, webhookName = urlToName[log.url], onClick = { detailLog = log })
+                        }
+                        if (index < filtered.lastIndex) Spacer(Modifier.height(2.dp))
                     }
                     item { Spacer(modifier = Modifier.height(80.dp)) }
                 }
@@ -705,7 +711,7 @@ fun LogsScreen() {
                             modifier = Modifier
                                 .size(6.dp)
                                 .clip(CircleShape)
-                                .background(Color(0xFF4CAF50))
+                                .background(MaterialTheme.colorScheme.tertiary)
                         )
                         Text(
                             if (serverLogs.isEmpty()) "Live · no requests yet"
@@ -760,9 +766,11 @@ fun LogsScreen() {
                     modifier = Modifier.fillMaxSize(),
                     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp)
                 ) {
-                    items(filteredServerLogs, key = { it.id }) { log ->
-                        ServerLogRow(log = log, onClick = { detailServerLog = log })
-                        HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.2f))
+                    itemsIndexed(filteredServerLogs, key = { _, log -> log.id }) { index, log ->
+                        GroupItem(index, filteredServerLogs.size) {
+                            ServerLogRow(log = log, onClick = { detailServerLog = log })
+                        }
+                        if (index < filteredServerLogs.lastIndex) Spacer(Modifier.height(2.dp))
                     }
                     item { Spacer(modifier = Modifier.height(80.dp)) }
                 }
@@ -774,69 +782,36 @@ fun LogsScreen() {
 
 @Composable
 private fun ServerLogRow(log: ServerRequestLog, onClick: () -> Unit) {
-    val methodColor = when (log.method) {
-        "GET"  -> Color(0xFF4CAF50)
-        "POST" -> Color(0xFF2196F3)
-        else   -> MaterialTheme.colorScheme.onSurfaceVariant
-    }
-    val statusColor = when {
-        log.statusCode in 200..299 -> Color(0xFF4CAF50)
-        log.statusCode >= 400      -> MaterialTheme.colorScheme.error
-        else                       -> MaterialTheme.colorScheme.onSurfaceVariant
-    }
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(vertical = 10.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(10.dp)
-    ) {
-        Text(
-            log.method,
-            style = MaterialTheme.typography.labelSmall,
-            color = methodColor,
-            modifier = Modifier.width(36.dp)
-        )
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                log.path,
-                style = MaterialTheme.typography.bodySmall,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-            Text(
-                "${log.clientIp} · ${formatTimestamp(log.timestamp)}",
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
-        Column(horizontalAlignment = Alignment.End) {
-            Text(
-                "${log.statusCode}",
-                style = MaterialTheme.typography.labelSmall,
-                color = statusColor
-            )
-            Text(
-                "${log.responseTimeMs}ms",
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
-    }
+    val colors = MaterialTheme.colorScheme
+    val ok = log.statusCode in 200..299
+    ListItem(
+        headlineContent = { Text("${log.method} ${log.path}", maxLines = 1, overflow = TextOverflow.Ellipsis) },
+        supportingContent = { Text("${log.clientIp} · ${formatTimestamp(log.timestamp)} · ${log.responseTimeMs} ms", maxLines = 1, overflow = TextOverflow.Ellipsis) },
+        leadingContent = {
+            if (ok) {
+                IconBadge(Icons.Filled.Check, container = colors.tertiaryContainer, content = colors.onTertiaryContainer)
+            } else {
+                IconBadge(Icons.Filled.Close, container = colors.errorContainer, content = colors.onErrorContainer)
+            }
+        },
+        trailingContent = {
+            Text("${log.statusCode}", style = MaterialTheme.typography.bodyMedium, color = if (ok) colors.tertiary else colors.error)
+        },
+        colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+        modifier = Modifier.clickable(onClick = onClick),
+    )
 }
 
 @Composable
 private fun ServerLogDetailSheet(log: ServerRequestLog) {
     val clipboardManager = LocalClipboardManager.current
     val methodColor = when (log.method) {
-        "GET"  -> Color(0xFF4CAF50)
+        "GET"  -> MaterialTheme.colorScheme.tertiary
         "POST" -> Color(0xFF2196F3)
         else   -> MaterialTheme.colorScheme.onSurfaceVariant
     }
     val statusColor = when {
-        log.statusCode in 200..299 -> Color(0xFF4CAF50)
+        log.statusCode in 200..299 -> MaterialTheme.colorScheme.tertiary
         log.statusCode >= 400      -> MaterialTheme.colorScheme.error
         else                       -> MaterialTheme.colorScheme.onSurfaceVariant
     }
@@ -924,79 +899,44 @@ private fun FilterUrlRow(label: String, selected: Boolean, onClick: () -> Unit) 
 
 @Composable
 private fun LogRow(log: WebhookLog, webhookName: String? = null, onClick: () -> Unit) {
-    val dotColor = if (log.success) Color(0xFF4CAF50) else MaterialTheme.colorScheme.error
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(vertical = 12.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Box(
-            modifier = Modifier
-                .size(8.dp)
-                .clip(CircleShape)
-                .background(dotColor)
-        )
-        Spacer(modifier = Modifier.width(12.dp))
-        Column(modifier = Modifier.weight(1f).padding(end = 8.dp)) {
-            if (webhookName != null) {
-                Text(
-                    text = webhookName,
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = androidx.compose.ui.text.font.FontWeight.Medium,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-            }
+    val colors = MaterialTheme.colorScheme
+    val host = remember(log.url) {
+        try { java.net.URI(log.url).host?.takeIf { it.isNotEmpty() } ?: log.url } catch (_: Exception) { log.url }
+    }
+    val syncLabel = when (log.syncType) {
+        null -> null
+        "manual" -> stringResource(R.string.logs_sync_manual)
+        "test" -> stringResource(R.string.logs_sync_test)
+        "notification" -> "Notification"
+        "outbox" -> stringResource(R.string.logs_sync_outbox)
+        else -> stringResource(R.string.logs_sync_auto)
+    }
+    ListItem(
+        headlineContent = { Text(webhookName ?: host, maxLines = 1, overflow = TextOverflow.Ellipsis) },
+        supportingContent = {
             Text(
-                text = log.url,
-                style = if (webhookName != null) MaterialTheme.typography.bodySmall else MaterialTheme.typography.bodyMedium,
+                listOfNotNull(formatTimestamp(log.timestamp), syncLabel, log.recordCount?.let { stringResource(R.string.logs_items_count, it) }).joinToString(" · "),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                color = if (webhookName != null) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface
             )
-            Spacer(modifier = Modifier.height(2.dp))
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(6.dp)
-            ) {
-                Text(
-                    formatTimestamp(log.timestamp),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
-                )
-                log.syncType?.let { type ->
-                    Surface(
-                        shape = MaterialTheme.shapes.extraSmall,
-                        color = MaterialTheme.colorScheme.surfaceVariant
-                    ) {
-                        Text(
-                            when (type) {
-                                "manual" -> stringResource(R.string.logs_sync_manual)
-                                "test" -> stringResource(R.string.logs_sync_test)
-                                "notification" -> "Notification"
-                                else -> stringResource(R.string.logs_sync_auto)
-                            },
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp)
-                        )
-                    }
-                }
+        },
+        leadingContent = {
+            if (log.success) {
+                IconBadge(Icons.Filled.Check, container = colors.tertiaryContainer, content = colors.onTertiaryContainer)
+            } else {
+                IconBadge(Icons.Filled.Close, container = colors.errorContainer, content = colors.onErrorContainer)
             }
-        }
-        Text(
-            text = "${log.statusCode ?: stringResource(R.string.logs_status_err)}",
-            style = MaterialTheme.typography.labelMedium,
-            color = if (log.success)
-                MaterialTheme.colorScheme.primary.copy(alpha = 0.8f)
-            else
-                MaterialTheme.colorScheme.error.copy(alpha = 0.8f)
-        )
-    }
+        },
+        trailingContent = {
+            Text(
+                text = "${log.statusCode ?: stringResource(R.string.logs_status_err)}",
+                style = MaterialTheme.typography.bodyMedium,
+                color = if (log.success) colors.tertiary else colors.error,
+            )
+        },
+        colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+        modifier = Modifier.clickable(onClick = onClick),
+    )
 }
 
 @Composable
@@ -1007,7 +947,7 @@ private fun LogDetailSheet(
 ) {
     val context = LocalContext.current
     val clipboardManager = LocalClipboardManager.current
-    val successColor = Color(0xFF4CAF50)
+    val successColor = MaterialTheme.colorScheme.tertiary
     val statusColor = if (log.success) successColor else MaterialTheme.colorScheme.error
     var showDeleteConfirm by remember { mutableStateOf(false) }
     var retryLoading by remember { mutableStateOf(false) }
@@ -1121,7 +1061,7 @@ private fun LogDetailSheet(
                 text = if (success) stringResource(R.string.webhooks_retry_success)
                        else stringResource(R.string.webhooks_retry_failed, retryMessage),
                 style = MaterialTheme.typography.labelSmall,
-                color = if (success) Color(0xFF4CAF50) else MaterialTheme.colorScheme.error
+                color = if (success) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.error
             )
         }
 

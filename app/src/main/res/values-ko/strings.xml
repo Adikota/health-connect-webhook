@@ -413,4 +413,24 @@
     <string name="logs_filter_delivery">전송</string>
     <string name="config_bucket_dedup_title">겹치는 앱은 한 번만 계산</string>
     <string name="config_bucket_dedup_hint">일일 합계처럼 Health Connect의 앱 우선순위를 사용합니다. 최우선 앱이 하루에 기록 하나만 쓰면 그 합계가 시간별로 고르게 나뉩니다.</string>
+    <string name="home_hero_never">없음</string>
+    <string name="home_hero_last_sync">마지막 동기화</string>
+    <string name="home_hero_sent">전송, 24시간</string>
+    <string name="home_hero_failed">실패, 24시간</string>
+    <string name="home_status_setup">설정이 완료되지 않음</string>
+    <string name="home_status_no_target">웹훅을 추가해 시작하세요</string>
+    <string name="home_status_manual">수동 동기화만</string>
+    <string name="home_status_on">동기화 켜짐</string>
+    <string name="home_status_no_times">동기화 시간 없음</string>
+    <string name="home_status_subtitle">웹훅: %1$d · 데이터 유형: %2$d</string>
+    <string name="home_section_sync">동기화</string>
+    <string name="home_schedule_every">%1$d분마다</string>
+    <string name="home_missing_perms_title">일부 데이터 유형에 액세스 권한이 필요합니다</string>
+    <string name="home_missing_perms_desc">액세스를 허용할 때까지 앱이 이 데이터 유형을 읽을 수 없습니다.</string>
+    <string name="battery_toast_open_failed">배터리 설정을 열 수 없습니다. 기기 설정에서 이 앱의 배터리 최적화를 끄세요.</string>
+    <string name="settings_dynamic_color_title">배경화면 색상</string>
+    <string name="settings_dynamic_color_desc">배경화면의 색상을 사용합니다</string>
+    <string name="webhooks_empty_title">아직 웹훅이 없습니다</string>
+    <string name="logs_sync_outbox">보낼 편지함</string>
+    <string name="logs_items_count">항목: %1$d</string>
 </resources>

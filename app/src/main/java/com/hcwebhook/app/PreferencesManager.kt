@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import com.hcwebhook.app.ui.AppearanceState
 
 enum class SyncMode {
     INTERVAL,    // Continuous sync at specified interval
@@ -19,6 +20,7 @@ class PreferencesManager(context: Context) {
         private const val KEY_LAST_SYNC_TS_PREFIX = "last_sync_ts_"
         private const val KEY_LAST_SYNC_IDS_PREFIX = "last_sync_ids_"
         private const val KEY_BUCKET_DEDUP = "bucket_dedup"
+        private const val KEY_DYNAMIC_COLOR = "dynamic_color"
         private const val KEY_CHANGES_TOKEN_PREFIX = "changes_token_"
         private const val KEY_LAST_STEPS_SYNC_TS = "last_steps_sync_ts"
         private const val KEY_LAST_SLEEP_SYNC_TS = "last_sleep_sync_ts"
@@ -368,6 +370,14 @@ class PreferencesManager(context: Context) {
 
     fun setBucketDedup(enabled: Boolean) {
         prefs.edit().putBoolean(KEY_BUCKET_DEDUP, enabled).apply()
+    }
+
+    /** Colors from the wallpaper instead of the brand colors (Android 12+). */
+    fun isDynamicColor(): Boolean = prefs.getBoolean(KEY_DYNAMIC_COLOR, false)
+
+    fun setDynamicColor(enabled: Boolean) {
+        prefs.edit().putBoolean(KEY_DYNAMIC_COLOR, enabled).apply()
+        AppearanceState.dynamicColor.value = enabled
     }
 
     fun setHasSeenOnboarding() {

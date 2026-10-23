@@ -25,6 +25,7 @@ import com.hcwebhook.app.screens.OnboardingScreen
 import com.hcwebhook.app.screens.SettingsBackupScreen
 import com.hcwebhook.app.screens.WebhooksScreen
 import com.hcwebhook.app.screens.WhatsNewSheet
+import com.hcwebhook.app.ui.AppearanceState
 import com.hcwebhook.app.ui.theme.HCWebhookTheme
 import kotlinx.coroutines.launch
 import androidx.compose.ui.res.stringResource
@@ -74,8 +75,9 @@ class MainActivity : AppCompatActivity() {
             openLocalHttpRequest.value = true
         }
 
+        AppearanceState.dynamicColor.value = preferencesManager.isDynamicColor()
         setContent {
-            HCWebhookTheme {
+            HCWebhookTheme(dynamicColor = AppearanceState.dynamicColor.value) {
                 var showOnboarding by remember { mutableStateOf(!preferencesManager.hasSeenOnboarding()) }
                 if (showOnboarding) {
                     OnboardingScreen(onFinish = {
@@ -176,9 +178,7 @@ class MainActivity : AppCompatActivity() {
         Scaffold(
             bottomBar = {
                 if (!showDashboard && !showLocalHttpSettings && !showNotificationsSettings && !showSettingsBackup && !showChangelog) {
-                    NavigationBar(
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant
-                    ) {
+                    NavigationBar(containerColor = MaterialTheme.colorScheme.surfaceContainer) {
                         bottomNavItems.forEach { screen ->
                             NavigationBarItem(
                                 icon = { Icon(screen.icon, contentDescription = stringResource(screen.titleResId)) },

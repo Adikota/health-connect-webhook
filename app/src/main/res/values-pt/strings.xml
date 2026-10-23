@@ -413,4 +413,24 @@
     <string name="logs_filter_delivery">Envio</string>
     <string name="config_bucket_dedup_title">Contar uma vez as apps que se sobrepõem</string>
     <string name="config_bucket_dedup_hint">Usa a prioridade das apps no Health Connect, como os totais diários. Se a sua app principal escrever um registo por dia, o total é distribuído de forma igual pelas horas.</string>
+    <string name="home_hero_never">Nunca</string>
+    <string name="home_hero_last_sync">Última sinc.</string>
+    <string name="home_hero_sent">Enviados, 24 h</string>
+    <string name="home_hero_failed">Falhas, 24 h</string>
+    <string name="home_status_setup">Configuração incompleta</string>
+    <string name="home_status_no_target">Adicione um webhook para começar</string>
+    <string name="home_status_manual">Apenas sincronização manual</string>
+    <string name="home_status_on">Sincronização ativa</string>
+    <string name="home_status_no_times">Sem horas de sincronização</string>
+    <string name="home_status_subtitle">Webhooks: %1$d · Tipos de dados: %2$d</string>
+    <string name="home_section_sync">Sincronização</string>
+    <string name="home_schedule_every">A cada %1$d min</string>
+    <string name="home_missing_perms_title">Alguns tipos de dados precisam de acesso</string>
+    <string name="home_missing_perms_desc">A app não consegue ler estes tipos de dados até permitir o acesso.</string>
+    <string name="battery_toast_open_failed">Não é possível abrir as definições de bateria. Desative a otimização de bateria para esta app nas definições do dispositivo.</string>
+    <string name="settings_dynamic_color_title">Cores do fundo</string>
+    <string name="settings_dynamic_color_desc">Usar as cores do seu fundo</string>
+    <string name="webhooks_empty_title">Ainda não há webhooks</string>
+    <string name="logs_sync_outbox">Pendente</string>
+    <string name="logs_items_count">Itens: %1$d</string>
 </resources>
