@@ -7,41 +7,37 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <TextView
-        android:id="@+id/widget_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textColor="@color/widget_on_brand"
-        android:textSize="18sp"
-        android:fontFamily="@font/bricolage_grotesque" />
-
-    <ImageView
-        android:id="@+id/widget_pulse"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:layout_weight="1"
-        android:scaleType="fitXY" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/widget_counts"
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textColor="@color/widget_on_brand_secondary"
-            android:textSize="14sp"
-            android:fontFamily="@font/ibm_plex_mono_regular" />
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/widget_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/widget_on_brand"
+                android:textSize="18sp"
+                android:fontFamily="@font/bricolage_grotesque" />
+
+            <TextView
+                android:id="@+id/widget_counts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/widget_on_brand_secondary"
+                android:textSize="14sp" />
+        </LinearLayout>
 
         <ImageButton
             android:id="@+id/widget_sync"
@@ -52,5 +48,46 @@
             android:padding="8dp"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_sync_brand" />
+    </LinearLayout>
+
+    <!-- A FrameLayout, not a View: RemoteViews accepts only some view classes. The free height
+         goes here, so the bars keep their size and round ends and sit on the bottom edge. -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:minHeight="8dp" />
+
+    <ImageView
+        android:id="@+id/widget_pulse"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:layout_marginEnd="4dp"
+        android:importantForAccessibility="no"
+        android:scaleType="fitCenter" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="sans-serif"
+            android:text="@string/home_pulse_start"
+            android:textColor="@color/widget_on_brand_secondary"
+            android:textSize="11sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:text="@string/home_pulse_end"
+            android:textColor="@color/widget_on_brand_secondary"
+            android:textSize="11sp" />
     </LinearLayout>
 </LinearLayout>

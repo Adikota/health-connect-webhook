@@ -437,9 +437,9 @@ fun SyncHero(
             Text(subtitle, style = MaterialTheme.typography.bodyMedium, color = colors.onPrimaryContainer.copy(alpha = 0.85f))
             Spacer(Modifier.height(16.dp))
             ActivityBars(events = syncEvents, now = now, active = isSyncing)
-            Row(Modifier.fillMaxWidth().padding(top = 4.dp)) {
-                Text(stringResource(R.string.home_pulse_start), style = MaterialTheme.typography.labelMedium.copy(fontFamily = Mono), color = colors.onPrimaryContainer.copy(alpha = 0.7f), modifier = Modifier.weight(1f))
-                Text(stringResource(R.string.home_pulse_end), style = MaterialTheme.typography.labelMedium.copy(fontFamily = Mono), color = colors.onPrimaryContainer.copy(alpha = 0.7f))
+            Row(Modifier.fillMaxWidth().padding(vertical = 6.dp)) {
+                Text(stringResource(R.string.home_pulse_start), style = MaterialTheme.typography.labelSmall, color = colors.onPrimaryContainer.copy(alpha = 0.7f), modifier = Modifier.weight(1f))
+                Text(stringResource(R.string.home_pulse_end), style = MaterialTheme.typography.labelSmall, color = colors.onPrimaryContainer.copy(alpha = 0.7f))
             }
             Spacer(Modifier.height(16.dp))
             Row(Modifier.fillMaxWidth()) {
@@ -524,12 +524,7 @@ private fun ActivityBars(events: List<Pair<Long, Boolean>>, now: Long, active: B
             }
             val full = (size.height * bar.total / max).coerceAtLeast(w)
             val height = w + (full - w) * rise.value
-            val sentHeight = height * bar.sent / bar.total
-            // Failed on top, faded; sent below, solid. Both parts keep the round ends.
-            drawRoundRect(ink.copy(alpha = 0.4f * alpha), Offset(x, size.height - height), Size(w, height), radius)
-            if (bar.sent > 0) {
-                drawRoundRect(ink.copy(alpha = alpha), Offset(x, size.height - sentHeight), Size(w, sentHeight.coerceAtLeast(w)), radius)
-            }
+            drawRoundRect(ink.copy(alpha = alpha), Offset(x, size.height - height), Size(w, height), radius)
         }
     }
 }

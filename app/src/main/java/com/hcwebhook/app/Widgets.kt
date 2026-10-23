@@ -117,31 +117,24 @@ class HeartbeatWidget : AppWidgetProvider() {
     /** The activity bars at the widget's own size: the same bars as the status card in the app. */
     private fun barsBitmap(context: Context, options: Bundle, events: List<Pair<Long, Boolean>>): Bitmap {
         val density = context.resources.displayMetrics.density
-        val widthDp = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH).takeIf { it > 0 } ?: 300
-        val width = ((widthDp - 32) * density).roundToInt().coerceIn(100, 1600)
-        val height = (40 * density).roundToInt()
+        // In portrait the widget is MIN_WIDTH wide; a wrong width would stretch the bars.
+        val widthDp = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH).takeIf { it > 0 } ?: 300
+        // Card padding is 16 + 16, bars have 4 more at the end.
+        val width = ((widthDp - 36) * density).roundToInt().coerceIn(100, 1600)
+        val height = (32 * density).roundToInt()
         val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
         val ink = ContextCompat.getColor(context, R.color.widget_on_brand)
-        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+        val on = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = ink }
+        val off = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = ink; alpha = 31 }
         val bars = hourlyBars(events, System.currentTimeMillis())
         val max = (bars.maxOfOrNull { it.total } ?: 0).coerceAtLeast(1)
         val gap = 3 * density
         val w = (width - gap * 23) / 24
-        fun bar(x: Float, h: Float, alpha: Float) {
-            paint.color = ink
-            paint.alpha = (alpha * 255).roundToInt()
-            canvas.drawRoundRect(x, height - h, x + w, height.toFloat(), w / 2, w / 2, paint)
-        }
         bars.forEachIndexed { index, hour ->
+            val h = if (hour.total == 0) w else (height.toFloat() * hour.total / max).coerceAtLeast(w)
             val x = index * (w + gap)
-            if (hour.total == 0) {
-                bar(x, w, 0.12f)
-                return@forEachIndexed
-            }
-            val full = (height.toFloat() * hour.total / max).coerceAtLeast(w)
-            bar(x, full, 0.4f)
-            if (hour.sent > 0) bar(x, (full * hour.sent / hour.total).coerceAtLeast(w), 1f)
+            canvas.drawRoundRect(x, height - h, x + w, height.toFloat(), w / 2, w / 2, if (hour.total == 0) off else on)
         }
         return bitmap
     }
