@@ -1,14 +1,11 @@
 package com.hcwebhook.app
 
-import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
-import android.content.ComponentName
 import android.content.Context
-import android.content.Intent
 import android.widget.RemoteViews
 
-/** Home screen widget: last sync time and summary, a sync button, and a tap to open the app. */
+/** 3×1: last sync time, the counts of the last 24 hours, a sync button, and a tap to open the app. */
 class SyncStatusWidget : AppWidgetProvider() {
 
     override fun onUpdate(context: Context, manager: AppWidgetManager, ids: IntArray) {
@@ -16,36 +13,18 @@ class SyncStatusWidget : AppWidgetProvider() {
     }
 
     companion object {
-        /** Redraws every placed widget. Call after a sync saves its status. */
-        fun updateAll(context: Context) {
-            val manager = AppWidgetManager.getInstance(context)
-            val ids = manager.getAppWidgetIds(ComponentName(context, SyncStatusWidget::class.java))
-            if (ids.isEmpty()) return
-            val views = views(context)
-            ids.forEach { manager.updateAppWidget(it, views) }
-        }
-
         private fun views(context: Context): RemoteViews {
             val prefs = PreferencesManager(context)
             val views = RemoteViews(context.packageName, R.layout.widget_sync_status)
             views.setTextViewText(R.id.widget_status, SyncStatusText.lastSync(context))
-            views.setTextViewText(R.id.widget_summary, prefs.getLastSyncSummary().orEmpty())
-
-            val syncIntent = Intent(context, SyncTriggerReceiver::class.java).apply {
-                action = SyncTrigger.ACTION_SYNC
-                putExtra(SyncTrigger.EXTRA_SOURCE, "widget")
-            }
-            views.setOnClickPendingIntent(
-                R.id.widget_sync,
-                PendingIntent.getBroadcast(context, 0, syncIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT),
+            val events = Widgets.deliveriesLast24h(context)
+            views.setTextViewText(
+                R.id.widget_summary,
+                if (events.isEmpty()) prefs.getLastSyncSummary().orEmpty()
+                else context.getString(R.string.widget_counts, events.count { it.second }, events.count { !it.second }),
             )
-            val openIntent = context.packageManager.getLaunchIntentForPackage(context.packageName)
-            if (openIntent != null) {
-                views.setOnClickPendingIntent(
-                    R.id.widget_root,
-                    PendingIntent.getActivity(context, 1, openIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT),
-                )
-            }
+            views.setOnClickPendingIntent(R.id.widget_sync, Widgets.syncIntent(context, "widget"))
+            Widgets.openAppIntent(context)?.let { views.setOnClickPendingIntent(R.id.widget_root, it) }
             return views
         }
     }

@@ -23,6 +23,7 @@ class PreferencesManager(context: Context) {
         private const val KEY_DYNAMIC_COLOR = "dynamic_color"
         private const val KEY_MCP_ENABLED = "mcp_enabled"
         private const val KEY_APP_LOCK = "app_lock"
+        private const val KEY_TODAY_SNAPSHOT = "widget_today"
         private const val KEY_MCP_SYNC_ALLOWED = "mcp_sync_allowed"
         private const val KEY_CHANGES_TOKEN_PREFIX = "changes_token_"
         private const val KEY_LAST_STEPS_SYNC_TS = "last_steps_sync_ts"
@@ -382,6 +383,13 @@ class PreferencesManager(context: Context) {
 
     fun setBucketDedup(enabled: Boolean) {
         prefs.edit().putBoolean(KEY_BUCKET_DEDUP, enabled).apply()
+    }
+
+    fun getTodaySnapshot(): TodaySnapshot? =
+        prefs.getString(KEY_TODAY_SNAPSHOT, null)?.let { runCatching { Json.decodeFromString<TodaySnapshot>(it) }.getOrNull() }
+
+    fun setTodaySnapshot(snapshot: TodaySnapshot) {
+        prefs.edit().putString(KEY_TODAY_SNAPSHOT, Json.encodeToString(snapshot)).apply()
     }
 
     /** Ask for the device screen lock when the app opens (see [AppLock]). */

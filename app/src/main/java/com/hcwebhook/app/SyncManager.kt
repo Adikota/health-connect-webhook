@@ -178,7 +178,7 @@ class SyncManager(private val context: Context) {
                 saveChangesTokens(typeChanges)
                 preferencesManager.setLastSyncTime(Instant.now().toEpochMilli())
                 preferencesManager.setLastSyncSummary("No new data")
-                SyncStatusWidget.updateAll(context)
+                Widgets.afterSync(context)
                 return@withContext Result.success(SyncResult.NoData)
             }
 
@@ -333,10 +333,12 @@ class SyncManager(private val context: Context) {
                 if (!atLeastOneAttempted) {
                     preferencesManager.setLastSyncTime(Instant.now().toEpochMilli())
                     preferencesManager.setLastSyncSummary("No matching data")
-                    SyncStatusWidget.updateAll(context)
+                    Widgets.afterSync(context)
                     return@withContext Result.success(SyncResult.NoMatchingData)
                 }
                 if (!atLeastOneSuccess) {
+                    // The heartbeat widgets show failed deliveries too.
+                    Widgets.updateAll(context)
                     return@withContext Result.failure(lastFailure ?: Exception("Failed to post to webhooks"))
                 }
                 // The sync moves its timestamps and tokens now, so a webhook that failed would never
@@ -353,7 +355,7 @@ class SyncManager(private val context: Context) {
             val summary = buildSyncSummary(healthData)
             preferencesManager.setLastSyncTime(Instant.now().toEpochMilli())
             preferencesManager.setLastSyncSummary(summary)
-            SyncStatusWidget.updateAll(context)
+            Widgets.afterSync(context)
 
             Result.success(SyncResult.Success(syncCounts))
         } catch (e: CancellationException) {

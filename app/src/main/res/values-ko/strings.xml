@@ -477,4 +477,22 @@
     <string name="trigger_last_sync">마지막 동기화 %1$s</string>
     <string name="trigger_widget_label">동기화 상태</string>
     <string name="trigger_widget_description">마지막 동기화 시간과 지금 동기화 버튼</string>
+    <string name="widget_counts">전송 %1$d · 실패 %2$d · 24시간</string>
+    <string name="widget_sync_now_label">지금 동기화</string>
+    <string name="widget_sync_now_description">한 번 탭해 동기화를 시작합니다.</string>
+    <string name="widget_heartbeat_label">동기화 심박</string>
+    <string name="widget_heartbeat_description">최근 24시간의 동기화와 지금 동기화.</string>
+    <string name="widget_today_label">오늘</string>
+    <string name="widget_today_description">오늘의 걸음 수, 수면, 체중, 심박수.</string>
+    <string name="widget_today_title">오늘</string>
+    <string name="widget_today_steps">걸음 수</string>
+    <string name="widget_today_sleep">수면</string>
+    <string name="widget_today_weight">체중</string>
+    <string name="widget_today_heart">심박수</string>
+    <string name="widget_locked">앱 잠금이 켜져 있습니다. 데이터를 보려면 앱을 여세요.</string>
+    <string name="widget_updated">업데이트 %1$s</string>
+    <string name="widget_no_data">아직 데이터가 없습니다. 한 번 동기화하세요.</string>
+    <string name="widget_sleep_value">%1$d시간 %2$d분</string>
+    <string name="widget_weight_value">%1$.1f kg</string>
+    <string name="widget_heart_value">%1$d bpm</string>
 </resources>

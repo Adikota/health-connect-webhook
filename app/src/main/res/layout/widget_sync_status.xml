@@ -6,7 +6,8 @@
     android:background="@drawable/widget_background"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:padding="12dp">
+    android:paddingStart="16dp"
+    android:paddingEnd="8dp">
 
     <LinearLayout
         android:layout_width="0dp"
@@ -18,18 +19,18 @@
             android:id="@+id/widget_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxLines="1"
             android:ellipsize="end"
+            android:maxLines="1"
             android:textColor="@color/widget_text_primary"
-            android:textSize="14sp"
-            android:textStyle="bold" />
+            android:textSize="16sp"
+            android:fontFamily="@font/bricolage_grotesque" />
 
         <TextView
             android:id="@+id/widget_summary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxLines="2"
             android:ellipsize="end"
+            android:maxLines="1"
             android:textColor="@color/widget_text_secondary"
             android:textSize="14sp" />
     </LinearLayout>
@@ -39,6 +40,6 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:background="@null"
-        android:contentDescription="@string/trigger_tile_label"
-        android:src="@drawable/ic_sync" />
+        android:contentDescription="@string/manual_sync_btn"
+        android:src="@drawable/ic_sync_brand" />
 </LinearLayout>

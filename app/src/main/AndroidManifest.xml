@@ -141,6 +141,48 @@
                 android:resource="@xml/sync_status_widget_info" />
         </receiver>
 
+        <receiver
+            android:name=".SyncNowWidget"
+            android:exported="true"
+            android:label="@string/widget_sync_now_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/sync_now_widget_info" />
+        </receiver>
+
+        <receiver
+            android:name=".HeartbeatWidget"
+            android:exported="true"
+            android:label="@string/widget_heartbeat_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/heartbeat_widget_info" />
+        </receiver>
+
+        <receiver
+            android:name=".TodayWidget"
+            android:exported="true"
+            android:label="@string/widget_today_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/today_widget_info" />
+        </receiver>
+
+        <!-- Expedited sync work runs as a foreground service on Android 11 and older. -->
+        <service
+            android:name="androidx.work.impl.foreground.SystemForegroundService"
+            android:foregroundServiceType="dataSync"
+            tools:node="merge" />
+
         <service
             android:name=".SyncTileService"
             android:exported="true"

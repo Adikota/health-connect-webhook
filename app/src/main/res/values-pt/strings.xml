@@ -477,4 +477,22 @@
     <string name="trigger_last_sync">Última sincronização %1$s</string>
     <string name="trigger_widget_label">Status da sincronização</string>
     <string name="trigger_widget_description">Hora da última sincronização e um botão para sincronizar</string>
+    <string name="widget_counts">Enviados %1$d · Falhas %2$d · 24 h</string>
+    <string name="widget_sync_now_label">Sincronizar agora</string>
+    <string name="widget_sync_now_description">Inicie uma sincronização com um toque.</string>
+    <string name="widget_heartbeat_label">Pulso de sincronização</string>
+    <string name="widget_heartbeat_description">As sincronizações das últimas 24 horas, com Sincronizar agora.</string>
+    <string name="widget_today_label">Hoje</string>
+    <string name="widget_today_description">Passos, sono, peso e frequência cardíaca de hoje.</string>
+    <string name="widget_today_title">Hoje</string>
+    <string name="widget_today_steps">Passos</string>
+    <string name="widget_today_sleep">Sono</string>
+    <string name="widget_today_weight">Peso</string>
+    <string name="widget_today_heart">Frequência cardíaca</string>
+    <string name="widget_locked">O bloqueio da app está ativo. Abra a app para ver os seus dados.</string>
+    <string name="widget_updated">Atualizado às %1$s</string>
+    <string name="widget_no_data">Ainda sem dados. Sincronize uma vez.</string>
+    <string name="widget_sleep_value">%1$d h %2$d min</string>
+    <string name="widget_weight_value">%1$.1f kg</string>
+    <string name="widget_heart_value">%1$d bpm</string>
 </resources>

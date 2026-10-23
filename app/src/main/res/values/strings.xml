@@ -496,6 +496,24 @@
     <string name="trigger_last_sync">Last sync %1$s</string>
     <string name="trigger_widget_label">Sync status</string>
     <string name="trigger_widget_description">Last sync time and a button to sync now</string>
+    <string name="widget_counts">Sent %1$d · Failed %2$d · 24 h</string>
+    <string name="widget_sync_now_label">Sync now</string>
+    <string name="widget_sync_now_description">Start a sync with one tap.</string>
+    <string name="widget_heartbeat_label">Sync heartbeat</string>
+    <string name="widget_heartbeat_description">The syncs of the last 24 hours, with Sync now.</string>
+    <string name="widget_today_label">Today</string>
+    <string name="widget_today_description">Steps, sleep, weight and heart rate of today.</string>
+    <string name="widget_today_title">Today</string>
+    <string name="widget_today_steps">Steps</string>
+    <string name="widget_today_sleep">Sleep</string>
+    <string name="widget_today_weight">Weight</string>
+    <string name="widget_today_heart">Heart rate</string>
+    <string name="widget_locked">App lock is on. Open the app to see your data.</string>
+    <string name="widget_updated">Updated %1$s</string>
+    <string name="widget_no_data">No data yet. Sync once.</string>
+    <string name="widget_sleep_value">%1$d h %2$d min</string>
+    <string name="widget_weight_value">%1$.1f kg</string>
+    <string name="widget_heart_value">%1$d bpm</string>
 </resources>
 
 

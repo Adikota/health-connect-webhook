@@ -477,4 +477,22 @@
     <string name="trigger_last_sync">கடைசி ஒத்திசைவு %1$s</string>
     <string name="trigger_widget_label">ஒத்திசைவு நிலை</string>
     <string name="trigger_widget_description">கடைசி ஒத்திசைவு நேரம் மற்றும் இப்போது ஒத்திசைக்கும் பொத்தான்</string>
+    <string name="widget_counts">அனுப்பியவை %1$d · தோல்வி %2$d · 24 ம.நே</string>
+    <string name="widget_sync_now_label">இப்போது ஒத்திசை</string>
+    <string name="widget_sync_now_description">ஒரு தட்டலில் ஒத்திசைவைத் தொடங்கு.</string>
+    <string name="widget_heartbeat_label">ஒத்திசைவு இதயத்துடிப்பு</string>
+    <string name="widget_heartbeat_description">கடந்த 24 மணிநேர ஒத்திசைவுகள், இப்போது ஒத்திசை உடன்.</string>
+    <string name="widget_today_label">இன்று</string>
+    <string name="widget_today_description">இன்றைய படிகள், தூக்கம், எடை மற்றும் இதயத் துடிப்பு.</string>
+    <string name="widget_today_title">இன்று</string>
+    <string name="widget_today_steps">படிகள்</string>
+    <string name="widget_today_sleep">தூக்கம்</string>
+    <string name="widget_today_weight">எடை</string>
+    <string name="widget_today_heart">இதயத் துடிப்பு</string>
+    <string name="widget_locked">ஆப் பூட்டு இயக்கத்தில் உள்ளது. உங்கள் தரவைப் பார்க்க ஆப்பைத் திறக்கவும்.</string>
+    <string name="widget_updated">புதுப்பிக்கப்பட்டது %1$s</string>
+    <string name="widget_no_data">இன்னும் தரவு இல்லை. ஒருமுறை ஒத்திசைக்கவும்.</string>
+    <string name="widget_sleep_value">%1$d ம %2$d நி</string>
+    <string name="widget_weight_value">%1$.1f கி.கி</string>
+    <string name="widget_heart_value">%1$d bpm</string>
 </resources>

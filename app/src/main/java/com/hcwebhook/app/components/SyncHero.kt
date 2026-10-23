@@ -49,6 +49,7 @@ import com.hcwebhook.app.R
 import com.hcwebhook.app.SyncManager
 import com.hcwebhook.app.SyncResult
 import com.hcwebhook.app.WebhookConfig
+import com.hcwebhook.app.pulseBeats
 import com.hcwebhook.app.ui.SectionTitle
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
@@ -487,9 +488,6 @@ fun SyncHero(
     }
 }
 
-/** One beat of the pulse line: its position and whether its deliveries went through. */
-private data class Beat(val x: Float, val anyOk: Boolean, val anyFailed: Boolean)
-
 /** Strong ease-out: starts fast, so the UI feels like it answers at once. */
 private val EaseOutStrong = CubicBezierEasing(0.23f, 1f, 0.32f, 1f)
 
@@ -519,16 +517,8 @@ private fun PulseLine(events: List<Pair<Long, Boolean>>, now: Long, active: Bool
         val beatHalf = 5.dp.toPx()
         val up = size.height * 0.45f
         val stroke = 2.dp.toPx()
-        // Deliveries closer than one beat width make one beat, so a busy hour stays readable. One
-        // sync goes to every webhook at the same time: the beat goes up when any delivery went
-        // through, with a dot below when some failed, and down only when all of them failed.
-        val beats = mutableListOf<Beat>()
-        events.sortedBy { it.first }.forEach { (time, ok) ->
-            val x = ((time - start).toFloat() / (now - start)).coerceIn(0f, 1f) * size.width
-            val last = beats.lastOrNull()
-            if (last == null || x - last.x > beatHalf * 3) beats += Beat(x, anyOk = ok, anyFailed = !ok)
-            else beats[beats.lastIndex] = last.copy(anyOk = last.anyOk || ok, anyFailed = last.anyFailed || !ok)
-        }
+        val beats = pulseBeats(events, start, now, minGap = beatHalf * 3 / size.width)
+            .map { it.copy(x = it.x * size.width) }
         val path = Path().apply {
             moveTo(0f, mid)
             beats.forEach { beat ->

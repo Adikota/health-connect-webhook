@@ -2514,6 +2514,45 @@ class HealthConnectManager(private val context: Context) {
         return requiredPermissions.all { it in granted }
     }
 
+    /**
+     * The Today widget values: steps since local midnight, the last sleep session of the past day,
+     * the latest weight (30 days) and the latest heart rate (2 hours). Only for synced types with
+     * access; a value that cannot be read is null.
+     */
+    suspend fun todaySnapshot(enabled: Set<HealthDataType>): TodaySnapshot {
+        val granted = getGrantedPermissions()
+        fun can(type: HealthDataType) = type in enabled && HealthPermission.getReadPermission(type.recordClass) in granted
+        suspend fun <T> orNull(read: suspend () -> T?): T? = try {
+            read()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (_: Exception) {
+            null
+        }
+        val now = Instant.now()
+        val midnight = java.time.LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()
+        fun <T : Record> latest(type: KClass<T>, from: Instant) =
+            ReadRecordsRequest(recordType = type, timeRangeFilter = TimeRangeFilter.between(from, now), ascendingOrder = false, pageSize = 1)
+        return TodaySnapshot(
+            updatedAt = now.toEpochMilli(),
+            steps = if (can(HealthDataType.STEPS)) orNull {
+                aggregateRL(AggregateRequest(setOf(StepsRecord.COUNT_TOTAL), TimeRangeFilter.between(midnight, now)))[StepsRecord.COUNT_TOTAL]
+            } else null,
+            sleepMinutes = if (can(HealthDataType.SLEEP)) orNull {
+                withHealthConnectRetry { healthConnectClient.readRecords(latest(SleepSessionRecord::class, now.minus(24, ChronoUnit.HOURS))) }
+                    .records.firstOrNull()?.let { Duration.between(it.startTime, it.endTime).toMinutes() }
+            } else null,
+            weightKg = if (can(HealthDataType.WEIGHT)) orNull {
+                withHealthConnectRetry { healthConnectClient.readRecords(latest(WeightRecord::class, now.minus(30, ChronoUnit.DAYS))) }
+                    .records.firstOrNull()?.weight?.inKilograms
+            } else null,
+            heartRate = if (can(HealthDataType.HEART_RATE)) orNull {
+                withHealthConnectRetry { healthConnectClient.readRecords(latest(HeartRateRecord::class, now.minus(2, ChronoUnit.HOURS))) }
+                    .records.firstOrNull()?.samples?.maxByOrNull { it.time }?.beatsPerMinute
+            } else null,
+        )
+    }
+
     suspend fun getGrantedPermissions(): Set<String> {
         if (!isHealthConnectAvailable()) return emptySet()
         return healthConnectClient.permissionController.getGrantedPermissions()
