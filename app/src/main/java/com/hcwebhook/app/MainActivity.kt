@@ -18,6 +18,7 @@ import com.hcwebhook.app.screens.AboutScreen
 import com.hcwebhook.app.screens.ChangelogScreen
 import com.hcwebhook.app.screens.ConfigurationScreen
 import com.hcwebhook.app.screens.DashboardScreen
+import com.hcwebhook.app.screens.DataTypesScreen
 import com.hcwebhook.app.screens.LocalHttpSettingsScreen
 import com.hcwebhook.app.screens.LogsScreen
 import com.hcwebhook.app.screens.NotificationsScreen
@@ -117,6 +118,7 @@ class MainActivity : AppCompatActivity() {
         var showNotificationsSettings by remember { mutableStateOf(false) }
         var showSettingsBackup by remember { mutableStateOf(false) }
         var showChangelog by remember { mutableStateOf(false) }
+        var showDataTypes by remember { mutableStateOf(false) }
         var showWhatsNew by remember { mutableStateOf(false) }
 
         LaunchedEffect(Unit) {
@@ -177,7 +179,7 @@ class MainActivity : AppCompatActivity() {
 
         Scaffold(
             bottomBar = {
-                if (!showDashboard && !showLocalHttpSettings && !showNotificationsSettings && !showSettingsBackup && !showChangelog) {
+                if (!showDashboard && !showLocalHttpSettings && !showNotificationsSettings && !showSettingsBackup && !showChangelog && !showDataTypes) {
                     NavigationBar(containerColor = MaterialTheme.colorScheme.surfaceContainer) {
                         bottomNavItems.forEach { screen ->
                             NavigationBarItem(
@@ -192,7 +194,9 @@ class MainActivity : AppCompatActivity() {
             }
         ) { padding ->
             BackHandler {
-                if (showDashboard) {
+                if (showDataTypes) {
+                    showDataTypes = false
+                } else if (showDashboard) {
                     showDashboard = false
                 } else if (showLocalHttpSettings) {
                     showLocalHttpSettings = false
@@ -210,7 +214,13 @@ class MainActivity : AppCompatActivity() {
             }
             val saveableStateHolder = rememberSaveableStateHolder()
             Box(modifier = Modifier.padding(padding)) {
-                if (showDashboard) {
+                if (showDataTypes) {
+                    DataTypesScreen(
+                        grantedPermissionsSet = grantedPermissionsSet,
+                        permissionLauncher = permissionLauncher,
+                        onBack = { showDataTypes = false },
+                    )
+                } else if (showDashboard) {
                     DashboardScreen(
                         hasPermissions = hasPermissions,
                         grantedPermissionsSet = grantedPermissionsSet,
@@ -236,6 +246,7 @@ class MainActivity : AppCompatActivity() {
                                 sdkStatus = sdkStatus,
                                 onOpenLocalHttpSettings = { showLocalHttpSettings = true },
                                 onOpenDashboard = { showDashboard = true },
+                                onOpenDataTypes = { showDataTypes = true },
                             )
                             is NavigationScreen.Webhooks -> WebhooksScreen(
                                 onOpenNotificationsSettings = { showNotificationsSettings = true }

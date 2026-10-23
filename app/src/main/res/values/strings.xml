@@ -114,7 +114,7 @@
 
     <string name="manual_sync_title">Manual Sync</string>
     <string name="manual_sync_desc">Trigger a manual sync to send current health data to webhooks</string>
-    <string name="manual_sync_time_range">Time Range</string>
+    <string name="manual_sync_time_range">Time range</string>
     <string name="manual_sync_default_range">Default (New data only)</string>
     <string name="manual_sync_past_1_day">Past 1 Day</string>
     <string name="manual_sync_past_7_days">Past 7 Days</string>
@@ -124,11 +124,11 @@
     <string name="manual_sync_end_date">Select End Date</string>
     <string name="manual_sync_start_label">Start Date: %1$s</string>
     <string name="manual_sync_end_label">End Date: %1$s</string>
-    <string name="manual_sync_confirm_title">Sync Now?</string>
+    <string name="manual_sync_confirm_title">Sync now?</string>
     <string name="manual_sync_confirm_desc">This will immediately send your health data to all configured webhooks.</string>
     <string name="manual_sync_send_to">Send to</string>
     <string name="manual_sync_all_webhooks">All webhooks</string>
-    <string name="manual_sync_btn">Sync Now</string>
+    <string name="manual_sync_btn">Sync now</string>
     <string name="action_ok">OK</string>
     <string name="action_cancel">Cancel</string>
     <string name="manual_sync_syncing">Syncing...</string>
@@ -159,8 +159,8 @@
     <string name="webhooks_empty_desc">No webhooks configured. Add a URL to start syncing data.</string>
     <string name="webhooks_headers_count">%1$d headers configured</string>
     <string name="webhooks_action_edit_headers">Edit Headers</string>
-    <string name="webhooks_new_url_label">New Webhook URL</string>
-    <string name="webhooks_action_add">Add Webhook</string>
+    <string name="webhooks_new_url_label">Webhook URL</string>
+    <string name="webhooks_action_add">Add webhook</string>
     <string name="webhooks_toast_invalid_url">Please enter a valid HTTP/HTTPS URL</string>
     <string name="webhooks_toast_invalid_target">Enter a valid HTTP URL or gRPC target (host:port)</string>
     <string name="webhooks_delivery_section">Delivery format</string>
@@ -213,14 +213,14 @@
     <string name="config_action_select_datatypes">Select Data Types Configure</string>
     <string name="config_action_view_perms">View permissions</string>
     <string name="config_action_select_dt">Select Data Types</string>
-    <string name="config_sync_schedule_title">Sync Schedule</string>
+    <string name="config_sync_schedule_title">When to sync</string>
     <string name="config_sync_mode_interval">Interval</string>
     <string name="config_sync_mode_scheduled">Scheduled</string>
-    <string name="config_sync_interval_label">Interval (Minutes)</string>
-    <string name="config_action_update_interval">Update Interval</string>
+    <string name="config_sync_interval_label">Interval (minutes)</string>
+    <string name="config_action_update_interval">Save</string>
     <string name="config_toast_interval_saved">Interval saved</string>
     <string name="config_toast_min_interval">Min 15 minutes</string>
-    <string name="config_action_add_schedule">Add Schedule Time</string>
+    <string name="config_action_add_schedule">Add a sync time</string>
     <string name="config_resolution_label">Resolution</string>
     <string name="config_interval_daily_resolution_hint">Daily total, raw intervals, or time buckets</string>
     <string name="config_interval_raw_resolution_hint">Raw intervals, daily total, or time buckets</string>
@@ -245,9 +245,9 @@
     <string name="config_steps_resolution_daily">Daily</string>
     <string name="config_bg_perm_title">Background Permission Required</string>
     <string name="config_bg_perm_desc">To sync data automatically on a schedule or interval, you must grant Health Connect access for background use.</string>
-    <string name="config_action_grant_bg">Grant Background Permission</string>
+    <string name="config_action_grant_bg">Allow background access</string>
     <string name="config_last_sync_title">Last Sync</string>
-    <string name="config_action_grant">Grant Permission</string>
+    <string name="config_action_grant">Allow access</string>
     <string name="config_action_grant_short">Grant</string>
     <string name="config_action_grant_missing">Grant Missing Permissions</string>
     <string name="config_toast_error">Error: %1$s</string>
@@ -281,7 +281,7 @@
 • All health data remains on your device until sent to your configured webhooks
 • Webhook URLs are stored locally on your device
 • You have full control over which data types are synced and where they are sent</string>
-    <string name="about_settings_backup_title">Settings Backup</string>
+    <string name="about_settings_backup_title">Settings backup</string>
     <string name="about_settings_backup_desc">Export or import your webhook URLs, headers, and sync schedule</string>
     <string name="settings_timestamps_title">Payload timestamps</string>
     <string name="settings_timestamps_utc">UTC</string>
@@ -300,8 +300,8 @@
     <string name="about_action_import">Import</string>
     <string name="about_section_settings">App settings</string>
     <string name="about_links_title">Help &amp; resources</string>
-    <string name="about_link_github">GitHub Repository</string>
-    <string name="about_link_feedback">Provide Feedback</string>
+    <string name="about_link_github">Source code on GitHub</string>
+    <string name="about_link_feedback">Send feedback</string>
     <string name="about_feedback_desc">Report bugs, request features, or share suggestions</string>
     <string name="feedback_title">Feedback</string>
     <string name="feedback_submit_title">Share your thoughts</string>
@@ -319,8 +319,8 @@
     <string name="feedback_weekly_dismiss">Dismiss</string>
     <string name="feedback_weekly_dismiss_hint">You can send feedback anytime from Settings → Provide Feedback.</string>
     <string name="feedback_weekly_debug_forced">Weekly feedback card unlocked. Open Home to see it.</string>
-    <string name="about_link_intro">View Introduction</string>
-    <string name="about_link_changelog">What\'s New</string>
+    <string name="about_link_intro">Show the introduction</string>
+    <string name="about_link_changelog">What\'s new</string>
     <string name="about_link_changelog_desc">Release history and updates</string>
 
     <!-- Changelog -->
@@ -334,7 +334,7 @@
     <string name="whats_new_version">You\'re now on version %1$s</string>
     <string name="whats_new_fallback">Thanks for updating! Check the full release history for details.</string>
     <string name="whats_new_got_it">Got it</string>
-    <string name="about_local_http_title">Local HTTP Server</string>
+    <string name="about_local_http_title">Local HTTP server</string>
     <string name="local_http_server_notification_channel_name">Local HTTP Server</string>
     <string name="local_http_server_notification_channel_desc">Keeps local HTTP endpoint active in background</string>
     <string name="local_http_server_notification_title">Local HTTP server is running</string>
@@ -455,6 +455,18 @@
     <string name="home_pulse_start">24 h ago</string>
     <string name="home_pulse_end">Now</string>
     <string name="home_pulse_description">Last 24 hours: %1$d sent, %2$d failed</string>
+    <string name="health_data_title">What to sync</string>
+    <string name="health_data_count">%1$d on</string>
+    <string name="health_data_allow">Allow access (%1$d)</string>
+    <string name="health_data_no_access">No access</string>
+    <string name="health_data_intro">Choose the health data that the app sends to your webhooks.</string>
+    <string name="category_activity">Activity</string>
+    <string name="category_body">Body measurements</string>
+    <string name="category_cycle">Cycle tracking</string>
+    <string name="category_nutrition">Nutrition</string>
+    <string name="category_sleep">Sleep</string>
+    <string name="category_vitals">Vitals</string>
+    <string name="category_wellness">Wellness</string>
 </resources>
 
 

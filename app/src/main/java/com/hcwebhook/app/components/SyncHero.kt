@@ -445,7 +445,7 @@ fun SyncHero(
             }
             Spacer(Modifier.height(16.dp))
             Row(Modifier.fillMaxWidth()) {
-                HeroStat(lastSyncText, stringResource(R.string.home_hero_last_sync), Modifier.weight(1.4f))
+                HeroStat(lastSyncText, stringResource(R.string.home_hero_last_sync), Modifier.weight(1.4f), mono = false)
                 HeroStat(sentLast24h?.toString() ?: "–", stringResource(R.string.home_hero_sent), Modifier.weight(1f))
                 HeroStat(failedLast24h?.toString() ?: "–", stringResource(R.string.home_hero_failed), Modifier.weight(1f))
             }
@@ -487,6 +487,9 @@ fun SyncHero(
     }
 }
 
+/** One beat of the pulse line: its position and whether its deliveries went through. */
+private data class Beat(val x: Float, val anyOk: Boolean, val anyFailed: Boolean)
+
 /** Strong ease-out: starts fast, so the UI feels like it answers at once. */
 private val EaseOutStrong = CubicBezierEasing(0.23f, 1f, 0.32f, 1f)
 
@@ -516,17 +519,21 @@ private fun PulseLine(events: List<Pair<Long, Boolean>>, now: Long, active: Bool
         val beatHalf = 5.dp.toPx()
         val up = size.height * 0.45f
         val stroke = 2.dp.toPx()
-        // Beats closer than one beat width merge into the first, so a busy hour stays readable.
-        val beats = mutableListOf<Pair<Float, Boolean>>()
+        // Deliveries closer than one beat width make one beat, so a busy hour stays readable. One
+        // sync goes to every webhook at the same time: the beat goes up when any delivery went
+        // through, with a dot below when some failed, and down only when all of them failed.
+        val beats = mutableListOf<Beat>()
         events.sortedBy { it.first }.forEach { (time, ok) ->
             val x = ((time - start).toFloat() / (now - start)).coerceIn(0f, 1f) * size.width
             val last = beats.lastOrNull()
-            if (last == null || x - last.first > beatHalf * 3) beats += x to ok
-            else if (!ok) beats[beats.lastIndex] = last.first to false
+            if (last == null || x - last.x > beatHalf * 3) beats += Beat(x, anyOk = ok, anyFailed = !ok)
+            else beats[beats.lastIndex] = last.copy(anyOk = last.anyOk || ok, anyFailed = last.anyFailed || !ok)
         }
         val path = Path().apply {
             moveTo(0f, mid)
-            beats.forEach { (x, ok) ->
+            beats.forEach { beat ->
+                val x = beat.x
+                val ok = beat.anyOk
                 val peak = if (ok) mid - up else mid + up * 0.8f
                 val dip = if (ok) mid + up * 0.25f else mid - up * 0.2f
                 lineTo((x - beatHalf * 2).coerceAtLeast(0f), mid)
@@ -539,8 +546,8 @@ private fun PulseLine(events: List<Pair<Long, Boolean>>, now: Long, active: Bool
         }
         clipRect(right = size.width * reveal.value) {
             drawPath(path, ink.copy(alpha = 0.9f), style = Stroke(width = stroke, cap = StrokeCap.Round, join = StrokeJoin.Round))
-            beats.filter { !it.second }.forEach { (x, _) ->
-                drawCircle(ink, radius = 3.dp.toPx(), center = Offset(x, mid + up * 0.8f))
+            beats.filter { it.anyFailed }.forEach { beat ->
+                drawCircle(ink, radius = 3.dp.toPx(), center = Offset(beat.x, mid + up * 0.8f))
             }
         }
         if (active) {
@@ -552,9 +559,14 @@ private fun PulseLine(events: List<Pair<Long, Boolean>>, now: Long, active: Bool
 }
 
 @Composable
-private fun HeroStat(value: String, label: String, modifier: Modifier = Modifier) {
+private fun HeroStat(value: String, label: String, modifier: Modifier = Modifier, mono: Boolean = true) {
     Column(modifier) {
-        Text(value, style = MaterialTheme.typography.titleMedium.copy(fontFamily = Mono), maxLines = 1, overflow = TextOverflow.Ellipsis)
+        Text(
+            value,
+            style = if (mono) MaterialTheme.typography.titleMedium.copy(fontFamily = Mono) else MaterialTheme.typography.titleMedium,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
         Text(label, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.85f))
     }
 }

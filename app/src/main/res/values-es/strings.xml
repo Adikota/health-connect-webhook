@@ -173,7 +173,7 @@
     <string name="config_action_select_datatypes">Seleccionar tipos de datos Configurar</string>
     <string name="config_action_view_perms">Ver permisos</string>
     <string name="config_action_select_dt">Seleccionar tipos de datos</string>
-    <string name="config_sync_schedule_title">Programación de sincronización</string>
+    <string name="config_sync_schedule_title">Cuándo sincronizar</string>
     <string name="config_sync_mode_interval">Intervalo</string>
     <string name="config_sync_mode_scheduled">Programado</string>
     <string name="config_sync_interval_label">Intervalo (Minutos)</string>
@@ -436,4 +436,16 @@
     <string name="home_pulse_start">hace 24 h</string>
     <string name="home_pulse_end">Ahora</string>
     <string name="home_pulse_description">Últimas 24 horas: %1$d enviados, %2$d fallidos</string>
+    <string name="health_data_title">Qué sincronizar</string>
+    <string name="health_data_count">%1$d activos</string>
+    <string name="health_data_allow">Permitir acceso (%1$d)</string>
+    <string name="health_data_no_access">Sin acceso</string>
+    <string name="health_data_intro">Elige los datos de salud que la app envía a tus webhooks.</string>
+    <string name="category_activity">Actividad</string>
+    <string name="category_body">Medidas corporales</string>
+    <string name="category_cycle">Seguimiento del ciclo</string>
+    <string name="category_nutrition">Nutrición</string>
+    <string name="category_sleep">Sueño</string>
+    <string name="category_vitals">Constantes vitales</string>
+    <string name="category_wellness">Bienestar</string>
 </resources>

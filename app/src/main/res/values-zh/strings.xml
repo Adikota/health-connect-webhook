@@ -173,7 +173,7 @@
     <string name="config_action_select_datatypes">选择数据类型 配置</string>
     <string name="config_action_view_perms">查看权限</string>
     <string name="config_action_select_dt">选择数据类型</string>
-    <string name="config_sync_schedule_title">同步时间表</string>
+    <string name="config_sync_schedule_title">同步时间</string>
     <string name="config_sync_mode_interval">间隔</string>
     <string name="config_sync_mode_scheduled">预定</string>
     <string name="config_sync_interval_label">间隔（分钟）</string>
@@ -436,4 +436,16 @@
     <string name="home_pulse_start">24 小时前</string>
     <string name="home_pulse_end">现在</string>
     <string name="home_pulse_description">过去 24 小时：已发送 %1$d，失败 %2$d</string>
+    <string name="health_data_title">同步内容</string>
+    <string name="health_data_count">已开启 %1$d 项</string>
+    <string name="health_data_allow">允许访问 (%1$d)</string>
+    <string name="health_data_no_access">无访问权限</string>
+    <string name="health_data_intro">选择应用发送到 Webhook 的健康数据。</string>
+    <string name="category_activity">活动</string>
+    <string name="category_body">身体测量</string>
+    <string name="category_cycle">周期跟踪</string>
+    <string name="category_nutrition">营养</string>
+    <string name="category_sleep">睡眠</string>
+    <string name="category_vitals">生命体征</string>
+    <string name="category_wellness">健康状况</string>
 </resources>

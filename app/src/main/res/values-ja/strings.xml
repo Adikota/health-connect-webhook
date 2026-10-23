@@ -173,7 +173,7 @@
     <string name="config_action_select_datatypes">データ型の選択 設定</string>
     <string name="config_action_view_perms">表示権限</string>
     <string name="config_action_select_dt">データ型の選択</string>
-    <string name="config_sync_schedule_title">同期スケジュール</string>
+    <string name="config_sync_schedule_title">同期のタイミング</string>
     <string name="config_sync_mode_interval">間隔</string>
     <string name="config_sync_mode_scheduled">予定されている</string>
     <string name="config_sync_interval_label">間隔 (分)</string>
@@ -436,4 +436,16 @@
     <string name="home_pulse_start">24 時間前</string>
     <string name="home_pulse_end">現在</string>
     <string name="home_pulse_description">過去 24 時間: 送信 %1$d 件、失敗 %2$d 件</string>
+    <string name="health_data_title">同期する項目</string>
+    <string name="health_data_count">%1$d 件オン</string>
+    <string name="health_data_allow">アクセスを許可 (%1$d)</string>
+    <string name="health_data_no_access">アクセス権なし</string>
+    <string name="health_data_intro">アプリが Webhook に送信する健康データを選択します。</string>
+    <string name="category_activity">アクティビティ</string>
+    <string name="category_body">身体測定</string>
+    <string name="category_cycle">周期トラッキング</string>
+    <string name="category_nutrition">栄養</string>
+    <string name="category_sleep">睡眠</string>
+    <string name="category_vitals">バイタル</string>
+    <string name="category_wellness">ウェルネス</string>
 </resources>

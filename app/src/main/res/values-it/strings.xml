@@ -173,7 +173,7 @@
     <string name="config_action_select_datatypes">Seleziona Tipi di dati Configura</string>
     <string name="config_action_view_perms">Visualizza le autorizzazioni</string>
     <string name="config_action_select_dt">Seleziona Tipi di dati</string>
-    <string name="config_sync_schedule_title">Sincronizza pianificazione</string>
+    <string name="config_sync_schedule_title">Quando sincronizzare</string>
     <string name="config_sync_mode_interval">Intervallo</string>
     <string name="config_sync_mode_scheduled">Programmato</string>
     <string name="config_sync_interval_label">Intervallo (minuti)</string>
@@ -436,4 +436,16 @@
     <string name="home_pulse_start">24 h fa</string>
     <string name="home_pulse_end">Ora</string>
     <string name="home_pulse_description">Ultime 24 ore: %1$d inviati, %2$d non riusciti</string>
+    <string name="health_data_title">Cosa sincronizzare</string>
+    <string name="health_data_count">%1$d attivi</string>
+    <string name="health_data_allow">Consenti accesso (%1$d)</string>
+    <string name="health_data_no_access">Nessun accesso</string>
+    <string name="health_data_intro">Scegli i dati sanitari che l\'app invia ai tuoi webhook.</string>
+    <string name="category_activity">Attività</string>
+    <string name="category_body">Misure corporee</string>
+    <string name="category_cycle">Monitoraggio del ciclo</string>
+    <string name="category_nutrition">Alimentazione</string>
+    <string name="category_sleep">Sonno</string>
+    <string name="category_vitals">Parametri vitali</string>
+    <string name="category_wellness">Benessere</string>
 </resources>

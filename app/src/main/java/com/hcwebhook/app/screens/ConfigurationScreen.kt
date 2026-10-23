@@ -82,6 +82,7 @@ fun ConfigurationScreen(
     sdkStatus: Int,
     onOpenLocalHttpSettings: () -> Unit = {},
     onOpenDashboard: () -> Unit = {},
+    onOpenDataTypes: () -> Unit = {},
     @Suppress("UNUSED_PARAMETER")
     onPermissionsUpdated: (Boolean, Set<String>) -> Unit = { _, _ -> }
 ) {
@@ -101,8 +102,6 @@ fun ConfigurationScreen(
     var batteryBannerDismissed by remember { mutableStateOf(preferencesManager.isBatteryBannerDismissed()) }
     val showBatteryBanner = isBatteryOptimized && !batteryBannerDismissed
 
-    var showDataTypesSheet by remember { mutableStateOf(false) }
-    var showPermissionsSheet by remember { mutableStateOf(false) }
     var showFeedbackSheet by remember { mutableStateOf(false) }
     var showWeeklyFeedbackPrompt by remember {
         mutableStateOf(preferencesManager.shouldShowWeeklyFeedbackPrompt())
@@ -238,7 +237,7 @@ fun ConfigurationScreen(
                     title = stringResource(R.string.config_perms_zero_title),
                     body = stringResource(R.string.config_perms_zero_desc),
                     action = stringResource(R.string.config_action_select_datatypes),
-                    onAction = { showDataTypesSheet = true },
+                    onAction = onOpenDataTypes,
                 )
             }
             if (hasPermissions == true && missingPermissionsForEnabled.isNotEmpty()) {
@@ -305,26 +304,12 @@ fun ConfigurationScreen(
             Group(title = stringResource(R.string.home_section_sync)) {
                 item {
                     SettingRow(
-                        title = stringResource(R.string.config_data_types),
-                        summary = stringResource(R.string.datatypes_selected_summary, enabledDataTypes.size),
+                        title = stringResource(R.string.health_data_title),
+                        summary = stringResource(R.string.health_data_count, enabledDataTypes.size),
                         icon = Icons.Filled.Checklist,
                         chevron = true,
-                        onClick = { showDataTypesSheet = true },
+                        onClick = onOpenDataTypes,
                     )
-                }
-                if (hasPermissions == true) {
-                    item {
-                        val grantedPermCount = HealthDataType.entries.count { type ->
-                            HealthPermission.getReadPermission(type.recordClass) in grantedPermissionsSet
-                        }
-                        SettingRow(
-                            title = stringResource(R.string.config_permissions_granted),
-                            summary = stringResource(R.string.datatypes_granted_summary, grantedPermCount, HealthDataType.entries.size),
-                            icon = Icons.Filled.Shield,
-                            chevron = true,
-                            onClick = { showPermissionsSheet = true },
-                        )
-                    }
                 }
                 if (isBackgroundGranted) {
                     item {
@@ -499,28 +484,6 @@ fun ConfigurationScreen(
             }
         }
 
-        if (showPermissionsSheet) {
-            PermissionsBottomSheet(grantedPermissionsSet = grantedPermissionsSet, onDismiss = { showPermissionsSheet = false })
-        }
-
-        if (showDataTypesSheet) {
-            DataTypesBottomSheet(
-                enabledDataTypes = enabledDataTypes,
-                grantedPermissionsSet = grantedPermissionsSet,
-                missingPermissionsForEnabled = missingPermissionsForEnabled,
-                onDismiss = { showDataTypesSheet = false },
-                onToggleDataType = { dataType, checked ->
-                    val newSet = if (checked) enabledDataTypes + dataType else enabledDataTypes - dataType
-                    enabledDataTypes = newSet
-                    preferencesManager.setEnabledDataTypes(newSet)
-                },
-                onRequestPermissions = {
-                    try { permissionLauncher.launch(missingPermissionsForEnabled) } catch (e: Exception) { Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_LONG).show() }
-                    showDataTypesSheet = false
-                }
-            )
-        }
-
         FeedbackSheet(
             visible = showFeedbackSheet,
             onDismiss = { showFeedbackSheet = false },
@@ -539,7 +502,7 @@ fun ConfigurationScreen(
 }
 
 @Composable
-private fun resolutionChipOptions(family: DataResolutionFamily): List<Pair<Int, String>> {
+internal fun resolutionChipOptions(family: DataResolutionFamily): List<Pair<Int, String>> {
     val full = stringResource(R.string.config_hr_resolution_full)
     val oneMin = stringResource(R.string.config_hr_resolution_1m)
     val fiveMin = stringResource(R.string.config_hr_resolution_5m)
@@ -575,7 +538,7 @@ private fun resolutionChipOptions(family: DataResolutionFamily): List<Pair<Int, 
  */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun ResolutionChipRow(
+internal fun ResolutionChipRow(
     subtitle: String,
     options: List<Pair<Int, String>>,
     selected: Int,
@@ -634,116 +597,6 @@ private fun ResolutionChipRow(
                     )
                 }
                 AppSwitch(bucketDedup, onBucketDedupChange)
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
-@Composable
-fun DataTypesBottomSheet(
-    enabledDataTypes: Set<HealthDataType>,
-    grantedPermissionsSet: Set<String>,
-    missingPermissionsForEnabled: Set<String>,
-    onDismiss: () -> Unit,
-    onToggleDataType: (HealthDataType, Boolean) -> Unit,
-    onRequestPermissions: () -> Unit
-) {
-    val context = LocalContext.current
-    val preferencesManager = remember { PreferencesManager(context) }
-    var resolutions by remember { mutableStateOf(preferencesManager.getDataTypeResolutions()) }
-    var bucketDedup by remember { mutableStateOf(preferencesManager.isBucketDedup()) }
-    val scope = rememberCoroutineScope()
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-
-    ModalBottomSheet(onDismissRequest = onDismiss, sheetState = sheetState) {
-        Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).padding(bottom = 32.dp)) {
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                Column {
-                    Text(text = stringResource(R.string.config_data_types), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
-                    Text(text = stringResource(id = R.string.datatypes_selected_summary, enabledDataTypes.size), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                }
-                IconButton(onClick = { scope.launch { sheetState.hide() }.invokeOnCompletion { onDismiss() } }) { Icon(Icons.Filled.Close, contentDescription = "Close") }
-            }
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = stringResource(id = R.string.dt_hc_rationale), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            Spacer(modifier = Modifier.height(16.dp))
-            androidx.compose.foundation.lazy.LazyColumn(modifier = Modifier.fillMaxWidth().heightIn(max = 520.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                items(HealthDataType.entries) { dataType ->
-                    val isPermissionGranted = HealthPermission.getReadPermission(dataType.recordClass) in grantedPermissionsSet
-                    val isEnabled = dataType in enabledDataTypes
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .alpha(if (isPermissionGranted) 1f else 0.5f),
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 8.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Row(
-                                modifier = Modifier.weight(1f).padding(end = 12.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                            ) {
-                                Icon(
-                                    imageVector = iconForDataType(dataType),
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.primary,
-                                    modifier = Modifier.size(20.dp),
-                                )
-                                Column {
-                                    Text(
-                                        text = stringResource(id = dataType.nameResId),
-                                        style = MaterialTheme.typography.bodyLarge,
-                                    )
-                                    Text(
-                                        text = stringResource(id = dataType.rationaleResId),
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                        maxLines = 2,
-                                        overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
-                                    )
-                                }
-                            }
-                            AppSwitch(isEnabled) { checked -> onToggleDataType(dataType, checked) }
-                        }
-                        val resolutionFamily = dataType.resolutionFamily
-                        if (resolutionFamily != null) {
-                            AnimatedVisibility(
-                                visible = isEnabled,
-                                enter = expandVertically(),
-                                exit = shrinkVertically(),
-                            ) {
-                                ResolutionChipRow(
-                                    subtitle = stringResource(resolutionSubtitleResId(resolutionFamily)),
-                                    options = resolutionChipOptions(resolutionFamily),
-                                    selected = resolutions[dataType] ?: dataType.defaultResolutionMinutes,
-                                    onSelect = {
-                                        resolutions = resolutions + (dataType to it)
-                                        preferencesManager.setDataTypeResolution(dataType, it)
-                                    },
-                                    bucketDedup = bucketDedup.takeIf { dataType.supportsBucketDedup },
-                                    onBucketDedupChange = {
-                                        bucketDedup = it
-                                        preferencesManager.setBucketDedup(it)
-                                    },
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-            if (missingPermissionsForEnabled.isNotEmpty()) {
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(onClick = onRequestPermissions, modifier = Modifier.fillMaxWidth(), colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)) {
-                    Icon(Icons.Filled.Shield, contentDescription = null)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(stringResource(R.string.config_action_grant_missing))
-                }
             }
         }
     }

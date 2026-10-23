@@ -173,7 +173,7 @@
     <string name="config_action_select_datatypes">தரவு வகைகளை உள்ளமைப்பதைத் தேர்ந்தெடுக்கவும்</string>
     <string name="config_action_view_perms">அனுமதிகளைப் பார்க்கவும்</string>
     <string name="config_action_select_dt">தரவு வகைகளைத் தேர்ந்தெடுக்கவும்</string>
-    <string name="config_sync_schedule_title">ஒத்திசைவு அட்டவணை</string>
+    <string name="config_sync_schedule_title">எப்போது ஒத்திசைப்பது</string>
     <string name="config_sync_mode_interval">இடைவெளி</string>
     <string name="config_sync_mode_scheduled">திட்டமிடப்பட்டது</string>
     <string name="config_sync_interval_label">இடைவெளி (நிமிடங்கள்)</string>
@@ -436,4 +436,16 @@
     <string name="home_pulse_start">24 ம.நே முன்</string>
     <string name="home_pulse_end">இப்போது</string>
     <string name="home_pulse_description">கடந்த 24 மணிநேரம்: %1$d அனுப்பப்பட்டன, %2$d தோல்வி</string>
+    <string name="health_data_title">எதை ஒத்திசைப்பது</string>
+    <string name="health_data_count">%1$d இயக்கத்தில்</string>
+    <string name="health_data_allow">அணுகலை அனுமதி (%1$d)</string>
+    <string name="health_data_no_access">அணுகல் இல்லை</string>
+    <string name="health_data_intro">ஆப் உங்கள் webhooks க்கு அனுப்பும் சுகாதாரத் தரவைத் தேர்வுசெய்யவும்.</string>
+    <string name="category_activity">செயல்பாடு</string>
+    <string name="category_body">உடல் அளவீடுகள்</string>
+    <string name="category_cycle">சுழற்சி கண்காணிப்பு</string>
+    <string name="category_nutrition">ஊட்டச்சத்து</string>
+    <string name="category_sleep">தூக்கம்</string>
+    <string name="category_vitals">உயிர் அளவீடுகள்</string>
+    <string name="category_wellness">நல்வாழ்வு</string>
 </resources>
