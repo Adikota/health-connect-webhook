@@ -448,4 +448,19 @@
     <string name="category_sleep">தூக்கம்</string>
     <string name="category_vitals">உயிர் அளவீடுகள்</string>
     <string name="category_wellness">நல்வாழ்வு</string>
+    <string name="integrations_title">ஒருங்கிணைப்புகள்</string>
+    <string name="integrations_summary">HTTP சர்வர்: %1$s · MCP: %2$s</string>
+    <string name="state_on">இயக்கம்</string>
+    <string name="state_off">நிறுத்தம்</string>
+    <string name="mcp_title">MCP சர்வர்</string>
+    <string name="mcp_desc">Claude போன்ற AI ஆப்கள் உங்கள் சுகாதாரத் தரவைப் படிக்கலாம்.</string>
+    <string name="mcp_address">முகவரி</string>
+    <string name="mcp_copy_setup">அமைப்பை நகலெடு</string>
+    <string name="mcp_copy_setup_desc">உங்கள் AI ஆப்பிற்கான முகவரி மற்றும் டோக்கனை நகலெடுக்கும்.</string>
+    <string name="mcp_allow_sync_title">AI ஒத்திசைவைத் தொடங்கலாம்</string>
+    <string name="mcp_allow_sync_desc">AI ஆப்கள் புதிய தரவை உங்கள் webhooks க்கு அனுப்பலாம்.</string>
+    <string name="mcp_needs_server">உள்ளூர் HTTP சர்வரை இயக்கவும். MCP சர்வர் அதைப் பயன்படுத்துகிறது.</string>
+    <string name="mcp_open_server">திற</string>
+    <string name="mcp_token_note">MCP சர்வருக்கு எப்போதும் சர்வர் டோக்கன் தேவை. அமைப்பை நகலெடு அதைச் சேர்க்கும். நம்பகமான நெட்வொர்க்குகளில் மட்டும் பயன்படுத்தவும்.</string>
+    <string name="mcp_copied">நகலெடுக்கப்பட்டது</string>
 </resources>

@@ -448,4 +448,19 @@
     <string name="category_sleep">수면</string>
     <string name="category_vitals">활력 징후</string>
     <string name="category_wellness">웰니스</string>
+    <string name="integrations_title">연동</string>
+    <string name="integrations_summary">HTTP 서버: %1$s · MCP: %2$s</string>
+    <string name="state_on">켜짐</string>
+    <string name="state_off">꺼짐</string>
+    <string name="mcp_title">MCP 서버</string>
+    <string name="mcp_desc">Claude 같은 AI 앱이 건강 데이터를 읽을 수 있습니다.</string>
+    <string name="mcp_address">주소</string>
+    <string name="mcp_copy_setup">설정 복사</string>
+    <string name="mcp_copy_setup_desc">AI 앱용 주소와 토큰을 복사합니다.</string>
+    <string name="mcp_allow_sync_title">AI가 동기화를 시작할 수 있음</string>
+    <string name="mcp_allow_sync_desc">AI 앱이 새 데이터를 웹훅으로 보낼 수 있습니다.</string>
+    <string name="mcp_needs_server">로컬 HTTP 서버를 켜세요. MCP 서버가 이를 사용합니다.</string>
+    <string name="mcp_open_server">열기</string>
+    <string name="mcp_token_note">MCP 서버에는 항상 서버 토큰이 필요합니다. 설정 복사에 포함됩니다. 신뢰할 수 있는 네트워크에서만 사용하세요.</string>
+    <string name="mcp_copied">복사됨</string>
 </resources>

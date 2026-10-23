@@ -448,4 +448,19 @@
     <string name="category_sleep">睡眠</string>
     <string name="category_vitals">バイタル</string>
     <string name="category_wellness">ウェルネス</string>
+    <string name="integrations_title">連携</string>
+    <string name="integrations_summary">HTTP サーバー: %1$s · MCP: %2$s</string>
+    <string name="state_on">オン</string>
+    <string name="state_off">オフ</string>
+    <string name="mcp_title">MCP サーバー</string>
+    <string name="mcp_desc">Claude などの AI アプリが健康データを読み取れます。</string>
+    <string name="mcp_address">アドレス</string>
+    <string name="mcp_copy_setup">設定をコピー</string>
+    <string name="mcp_copy_setup_desc">AI アプリ用のアドレスとトークンをコピーします。</string>
+    <string name="mcp_allow_sync_title">AI が同期を開始できる</string>
+    <string name="mcp_allow_sync_desc">AI アプリが新しいデータを Webhook に送信できます。</string>
+    <string name="mcp_needs_server">ローカル HTTP サーバーをオンにしてください。MCP サーバーはこれを使用します。</string>
+    <string name="mcp_open_server">開く</string>
+    <string name="mcp_token_note">MCP サーバーには常にサーバーのトークンが必要です。「設定をコピー」で追加されます。信頼できるネットワークでのみ使用してください。</string>
+    <string name="mcp_copied">コピーしました</string>
 </resources>

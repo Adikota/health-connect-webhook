@@ -11,6 +11,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import android.os.Build
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Hub
 import androidx.compose.material.icons.filled.Palette
 import com.hcwebhook.app.ui.AppearanceState
 import com.hcwebhook.app.ui.Group
@@ -94,13 +95,13 @@ fun AboutScreen(
             Group(title = stringResource(R.string.settings_section_sync)) {
                 item {
                     SettingRow(
-                        icon = Icons.Filled.Lan,
-                        title = stringResource(R.string.about_local_http_title),
-                        summary = if (localHttpEnabled) {
-                            stringResource(R.string.settings_local_http_on, localHttpPort)
-                        } else {
-                            stringResource(R.string.settings_local_http_off)
-                        },
+                        icon = Icons.Filled.Hub,
+                        title = stringResource(R.string.integrations_title),
+                        summary = stringResource(
+                            R.string.integrations_summary,
+                            stringResource(if (localHttpEnabled) R.string.state_on else R.string.state_off),
+                            stringResource(if (preferencesManager.isMcpEnabled()) R.string.state_on else R.string.state_off),
+                        ),
                         chevron = true,
                         onClick = onOpenLocalHttpSettings,
                     )

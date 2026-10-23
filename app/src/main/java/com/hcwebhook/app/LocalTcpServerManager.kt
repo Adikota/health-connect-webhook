@@ -36,6 +36,7 @@ data class ServerRequestLog(
 )
 
 object LocalHttpServerManager {
+    private const val MAX_BODY_BYTES = 64 * 1024
     private const val TAG = "LocalHttpServer"
     private val serverScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val serverMutex = Mutex()
@@ -177,19 +178,23 @@ object LocalHttpServerManager {
                 logPath = rawPath.substringBefore("?")
 
                 var authorizationHeader: String? = null
+                var contentLength = 0
                 while (true) {
                     val headerLine = reader.readLine() ?: break
                     if (headerLine.isBlank()) break
                     val lower = headerLine.lowercase()
                     if (lower.startsWith("authorization:")) {
                         authorizationHeader = headerLine.substringAfter(":").trim()
+                    } else if (lower.startsWith("content-length:")) {
+                        contentLength = headerLine.substringAfter(":").trim().toIntOrNull()?.coerceIn(0, MAX_BODY_BYTES) ?: 0
                     }
                 }
 
                 val ctx = appContext
                 if (ctx != null) {
                     val prefs = PreferencesManager(ctx)
-                    if (prefs.isLocalHttpAuthEnabled()) {
+                    // MCP gives an AI app the health data, so it always needs the token.
+                    if (prefs.isLocalHttpAuthEnabled() || logPath == "/mcp") {
                         val expected = "Bearer ${prefs.getLocalHttpToken()}"
                         if (authorizationHeader != expected) {
                             reply(401, """{"status":"error","message":"Unauthorized"}""")
@@ -269,6 +274,25 @@ object LocalHttpServerManager {
                     method == "GET" && path == "/server-logs" ->
                         logStatus = handleServerLogsRequest(writer, queryParams)
 
+                    path == "/mcp" -> {
+                        val context = appContext ?: run {
+                            reply(500, """{"status":"error","message":"Server context unavailable"}""")
+                            return
+                        }
+                        if (!PreferencesManager(context).isMcpEnabled()) {
+                            reply(404, """{"status":"error","message":"MCP is off. Turn it on in the app: Integrations, MCP server."}""")
+                            return
+                        }
+                        if (method != "POST") {
+                            reply(405, """{"status":"error","message":"Use POST with a JSON-RPC message"}""")
+                            return
+                        }
+                        val body = readBody(reader, contentLength)
+                        val response = McpServer(HealthMcpTools(context), BuildConfig.VERSION_NAME).handle(body)
+                        logStatus = if (response == null) 202 else 200
+                        writeHttpResponse(writer, logStatus, response.orEmpty(), versioned = false)
+                    }
+
                     method == "POST" && path == "/sync" -> {
                         val context = appContext ?: run {
                             reply(500, """{"status":"error","message":"Server context unavailable"}""")
@@ -288,7 +312,7 @@ object LocalHttpServerManager {
 
                     else -> reply(
                         404,
-                        """{"status":"error","message":"Unknown endpoint. Available: GET /, /ping, /latest, /logs, /stats, /health, /server-logs; POST /sync"}"""
+                        """{"status":"error","message":"Unknown endpoint. Available: GET /, /ping, /latest, /logs, /stats, /health, /server-logs; POST /sync, /mcp"}"""
                     )
                 }
             } catch (_: Exception) {
@@ -510,9 +534,23 @@ object LocalHttpServerManager {
         writer.flush()
     }
 
-    private fun writeHttpResponse(writer: BufferedWriter, statusCode: Int, body: String) {
+    /** Reads [byteCount] bytes of UTF-8 body from [reader], which already holds the headers' buffer. */
+    private fun readBody(reader: BufferedReader, byteCount: Int): String {
+        val body = StringBuilder()
+        var bytes = 0
+        while (bytes < byteCount) {
+            val c = reader.read()
+            if (c < 0) break
+            body.append(c.toChar())
+            bytes += c.toChar().toString().toByteArray(Charsets.UTF_8).size
+        }
+        return body.toString()
+    }
+
+    private fun writeHttpResponse(writer: BufferedWriter, statusCode: Int, body: String, versioned: Boolean = true) {
         val statusText = when (statusCode) {
             200 -> "OK"
+            202 -> "Accepted"
             204 -> "No Content"
             400 -> "Bad Request"
             401 -> "Unauthorized"
@@ -520,7 +558,7 @@ object LocalHttpServerManager {
             405 -> "Method Not Allowed"
             else -> "Internal Server Error"
         }
-        val versionedBody = withAppVersion(body, BuildConfig.VERSION_NAME)
+        val versionedBody = if (versioned) withAppVersion(body, BuildConfig.VERSION_NAME) else body
         val bodyBytes = versionedBody.toByteArray(Charsets.UTF_8)
         writer.write("HTTP/1.1 $statusCode $statusText\r\n")
         writer.write("Content-Type: application/json; charset=utf-8\r\n")

@@ -32,6 +32,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.BatteryAlert
 import androidx.compose.material.icons.filled.Checklist
+import androidx.compose.material.icons.filled.Hub
 import androidx.compose.material.icons.filled.Lan
 import androidx.compose.material.icons.filled.Android
 import androidx.compose.material.icons.filled.Check
@@ -83,6 +84,7 @@ fun ConfigurationScreen(
     onOpenLocalHttpSettings: () -> Unit = {},
     onOpenDashboard: () -> Unit = {},
     onOpenDataTypes: () -> Unit = {},
+    onOpenIntegrations: () -> Unit = {},
     @Suppress("UNUSED_PARAMETER")
     onPermissionsUpdated: (Boolean, Set<String>) -> Unit = { _, _ -> }
 ) {
@@ -324,15 +326,15 @@ fun ConfigurationScreen(
                 }
                 item {
                     SettingRow(
-                        title = stringResource(R.string.about_local_http_title),
-                        summary = if (isLocalHttpEnabled) {
-                            stringResource(R.string.settings_local_http_on, localHttpPort)
-                        } else {
-                            stringResource(R.string.settings_local_http_off)
-                        },
-                        icon = Icons.Filled.Lan,
+                        title = stringResource(R.string.integrations_title),
+                        summary = stringResource(
+                            R.string.integrations_summary,
+                            stringResource(if (isLocalHttpEnabled) R.string.state_on else R.string.state_off),
+                            stringResource(if (preferencesManager.isMcpEnabled()) R.string.state_on else R.string.state_off),
+                        ),
+                        icon = Icons.Filled.Hub,
                         chevron = true,
-                        onClick = onOpenLocalHttpSettings,
+                        onClick = onOpenIntegrations,
                     )
                 }
             }

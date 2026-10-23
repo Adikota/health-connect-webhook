@@ -448,4 +448,19 @@
     <string name="category_sleep">睡眠</string>
     <string name="category_vitals">生命体征</string>
     <string name="category_wellness">健康状况</string>
+    <string name="integrations_title">集成</string>
+    <string name="integrations_summary">HTTP 服务器：%1$s · MCP：%2$s</string>
+    <string name="state_on">开启</string>
+    <string name="state_off">关闭</string>
+    <string name="mcp_title">MCP 服务器</string>
+    <string name="mcp_desc">Claude 等 AI 应用可以读取您的健康数据。</string>
+    <string name="mcp_address">地址</string>
+    <string name="mcp_copy_setup">复制设置</string>
+    <string name="mcp_copy_setup_desc">复制 AI 应用所需的地址和令牌。</string>
+    <string name="mcp_allow_sync_title">AI 可以开始同步</string>
+    <string name="mcp_allow_sync_desc">AI 应用可以将新数据发送到您的 Webhook。</string>
+    <string name="mcp_needs_server">请开启本地 HTTP 服务器。MCP 服务器使用它。</string>
+    <string name="mcp_open_server">打开</string>
+    <string name="mcp_token_note">MCP 服务器始终需要服务器令牌。“复制设置”会添加令牌。请仅在可信网络中使用。</string>
+    <string name="mcp_copied">已复制</string>
 </resources>

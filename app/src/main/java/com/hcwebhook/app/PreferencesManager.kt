@@ -21,6 +21,8 @@ class PreferencesManager(context: Context) {
         private const val KEY_LAST_SYNC_IDS_PREFIX = "last_sync_ids_"
         private const val KEY_BUCKET_DEDUP = "bucket_dedup"
         private const val KEY_DYNAMIC_COLOR = "dynamic_color"
+        private const val KEY_MCP_ENABLED = "mcp_enabled"
+        private const val KEY_MCP_SYNC_ALLOWED = "mcp_sync_allowed"
         private const val KEY_CHANGES_TOKEN_PREFIX = "changes_token_"
         private const val KEY_LAST_STEPS_SYNC_TS = "last_steps_sync_ts"
         private const val KEY_LAST_SLEEP_SYNC_TS = "last_sleep_sync_ts"
@@ -370,6 +372,20 @@ class PreferencesManager(context: Context) {
 
     fun setBucketDedup(enabled: Boolean) {
         prefs.edit().putBoolean(KEY_BUCKET_DEDUP, enabled).apply()
+    }
+
+    /** MCP server on the local HTTP server, at /mcp. Off until the user turns it on. */
+    fun isMcpEnabled(): Boolean = prefs.getBoolean(KEY_MCP_ENABLED, false)
+
+    fun setMcpEnabled(enabled: Boolean) {
+        prefs.edit().putBoolean(KEY_MCP_ENABLED, enabled).apply()
+    }
+
+    /** Whether MCP clients can start a sync (the sync_now tool). Off by default. */
+    fun isMcpSyncAllowed(): Boolean = prefs.getBoolean(KEY_MCP_SYNC_ALLOWED, false)
+
+    fun setMcpSyncAllowed(allowed: Boolean) {
+        prefs.edit().putBoolean(KEY_MCP_SYNC_ALLOWED, allowed).apply()
     }
 
     /** Colors from the wallpaper instead of the brand colors (Android 12+). */

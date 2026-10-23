@@ -101,7 +101,7 @@ private fun CodeBlock(label: String, code: String, onCopy: () -> Unit) {
 }
 
 @Suppress("DEPRECATION")
-private fun getLocalIpAddress(context: android.content.Context): String {
+internal fun getLocalIpAddress(context: android.content.Context): String {
     // WifiManager gives the most reliable Wi-Fi IP on all API levels
     try {
         val wm = context.applicationContext

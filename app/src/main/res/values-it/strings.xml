@@ -448,4 +448,19 @@
     <string name="category_sleep">Sonno</string>
     <string name="category_vitals">Parametri vitali</string>
     <string name="category_wellness">Benessere</string>
+    <string name="integrations_title">Integrazioni</string>
+    <string name="integrations_summary">Server HTTP: %1$s · MCP: %2$s</string>
+    <string name="state_on">Attivo</string>
+    <string name="state_off">Disattivo</string>
+    <string name="mcp_title">Server MCP</string>
+    <string name="mcp_desc">Le app di IA, come Claude, possono leggere i tuoi dati sanitari.</string>
+    <string name="mcp_address">Indirizzo</string>
+    <string name="mcp_copy_setup">Copia configurazione</string>
+    <string name="mcp_copy_setup_desc">Copia indirizzo e token per la tua app di IA.</string>
+    <string name="mcp_allow_sync_title">L\'IA può avviare una sincronizzazione</string>
+    <string name="mcp_allow_sync_desc">Le app di IA possono inviare nuovi dati ai tuoi webhook.</string>
+    <string name="mcp_needs_server">Attiva il server HTTP locale. Il server MCP lo usa.</string>
+    <string name="mcp_open_server">Apri</string>
+    <string name="mcp_token_note">Il server MCP richiede sempre il token del server. Copia configurazione lo aggiunge. Usalo solo su reti di cui ti fidi.</string>
+    <string name="mcp_copied">Copiato</string>
 </resources>

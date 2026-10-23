@@ -19,6 +19,7 @@ import com.hcwebhook.app.screens.ChangelogScreen
 import com.hcwebhook.app.screens.ConfigurationScreen
 import com.hcwebhook.app.screens.DashboardScreen
 import com.hcwebhook.app.screens.DataTypesScreen
+import com.hcwebhook.app.screens.IntegrationsScreen
 import com.hcwebhook.app.screens.LocalHttpSettingsScreen
 import com.hcwebhook.app.screens.LogsScreen
 import com.hcwebhook.app.screens.NotificationsScreen
@@ -119,6 +120,7 @@ class MainActivity : AppCompatActivity() {
         var showSettingsBackup by remember { mutableStateOf(false) }
         var showChangelog by remember { mutableStateOf(false) }
         var showDataTypes by remember { mutableStateOf(false) }
+        var showIntegrations by remember { mutableStateOf(false) }
         var showWhatsNew by remember { mutableStateOf(false) }
 
         LaunchedEffect(Unit) {
@@ -179,7 +181,7 @@ class MainActivity : AppCompatActivity() {
 
         Scaffold(
             bottomBar = {
-                if (!showDashboard && !showLocalHttpSettings && !showNotificationsSettings && !showSettingsBackup && !showChangelog && !showDataTypes) {
+                if (!showDashboard && !showLocalHttpSettings && !showNotificationsSettings && !showSettingsBackup && !showChangelog && !showDataTypes && !showIntegrations) {
                     NavigationBar(containerColor = MaterialTheme.colorScheme.surfaceContainer) {
                         bottomNavItems.forEach { screen ->
                             NavigationBarItem(
@@ -200,6 +202,8 @@ class MainActivity : AppCompatActivity() {
                     showDashboard = false
                 } else if (showLocalHttpSettings) {
                     showLocalHttpSettings = false
+                } else if (showIntegrations) {
+                    showIntegrations = false
                 } else if (showNotificationsSettings) {
                     showNotificationsSettings = false
                 } else if (showSettingsBackup) {
@@ -229,6 +233,11 @@ class MainActivity : AppCompatActivity() {
                     )
                 } else if (showLocalHttpSettings) {
                     LocalHttpSettingsScreen(onBack = { showLocalHttpSettings = false })
+                } else if (showIntegrations) {
+                    IntegrationsScreen(
+                        onBack = { showIntegrations = false },
+                        onOpenLocalHttpSettings = { showLocalHttpSettings = true },
+                    )
                 } else if (showNotificationsSettings) {
                     NotificationsScreen(onBack = { showNotificationsSettings = false })
                 } else if (showSettingsBackup) {
@@ -247,6 +256,7 @@ class MainActivity : AppCompatActivity() {
                                 onOpenLocalHttpSettings = { showLocalHttpSettings = true },
                                 onOpenDashboard = { showDashboard = true },
                                 onOpenDataTypes = { showDataTypes = true },
+                                onOpenIntegrations = { showIntegrations = true },
                             )
                             is NavigationScreen.Webhooks -> WebhooksScreen(
                                 onOpenNotificationsSettings = { showNotificationsSettings = true }
@@ -254,7 +264,7 @@ class MainActivity : AppCompatActivity() {
                             is NavigationScreen.Logs -> LogsScreen()
                             is NavigationScreen.About -> AboutScreen(
                                 onRestartOnboarding = onRestartOnboarding,
-                                onOpenLocalHttpSettings = { showLocalHttpSettings = true },
+                                onOpenLocalHttpSettings = { showIntegrations = true },
                                 onOpenNotificationsSettings = { showNotificationsSettings = true },
                                 onOpenSettingsBackup = { showSettingsBackup = true },
                                 onOpenChangelog = { showChangelog = true },

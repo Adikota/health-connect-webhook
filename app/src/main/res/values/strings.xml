@@ -467,6 +467,21 @@
     <string name="category_sleep">Sleep</string>
     <string name="category_vitals">Vitals</string>
     <string name="category_wellness">Wellness</string>
+    <string name="integrations_title">Integrations</string>
+    <string name="integrations_summary">HTTP server: %1$s · MCP: %2$s</string>
+    <string name="state_on">On</string>
+    <string name="state_off">Off</string>
+    <string name="mcp_title">MCP server</string>
+    <string name="mcp_desc">AI apps, such as Claude, can read your health data.</string>
+    <string name="mcp_address">Address</string>
+    <string name="mcp_copy_setup">Copy setup</string>
+    <string name="mcp_copy_setup_desc">Copies the address and the token for your AI app.</string>
+    <string name="mcp_allow_sync_title">AI can start a sync</string>
+    <string name="mcp_allow_sync_desc">AI apps can send new data to your webhooks.</string>
+    <string name="mcp_needs_server">Turn on the local HTTP server. The MCP server uses it.</string>
+    <string name="mcp_open_server">Open</string>
+    <string name="mcp_token_note">The MCP server always needs the server token. Copy setup adds it. Use it only on networks that you trust.</string>
+    <string name="mcp_copied">Copied</string>
 </resources>
 
 

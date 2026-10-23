@@ -448,4 +448,19 @@
     <string name="category_sleep">Schlaf</string>
     <string name="category_vitals">Vitalwerte</string>
     <string name="category_wellness">Wohlbefinden</string>
+    <string name="integrations_title">Integrationen</string>
+    <string name="integrations_summary">HTTP-Server: %1$s · MCP: %2$s</string>
+    <string name="state_on">An</string>
+    <string name="state_off">Aus</string>
+    <string name="mcp_title">MCP-Server</string>
+    <string name="mcp_desc">KI-Apps wie Claude können deine Gesundheitsdaten lesen.</string>
+    <string name="mcp_address">Adresse</string>
+    <string name="mcp_copy_setup">Einrichtung kopieren</string>
+    <string name="mcp_copy_setup_desc">Kopiert Adresse und Token für deine KI-App.</string>
+    <string name="mcp_allow_sync_title">KI kann einen Sync starten</string>
+    <string name="mcp_allow_sync_desc">KI-Apps können neue Daten an deine Webhooks senden.</string>
+    <string name="mcp_needs_server">Schalte den lokalen HTTP-Server ein. Der MCP-Server nutzt ihn.</string>
+    <string name="mcp_open_server">Öffnen</string>
+    <string name="mcp_token_note">Der MCP-Server braucht immer das Server-Token. „Einrichtung kopieren\" fügt es hinzu. Nutze ihn nur in Netzwerken, denen du vertraust.</string>
+    <string name="mcp_copied">Kopiert</string>
 </resources>
