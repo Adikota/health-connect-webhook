@@ -3,16 +3,6 @@
 An Android app that forwards health data from Google Fit, Samsung Health, Fitbit,
 and other apps to your webhooks or local tools via Health Connect.
 
-<table role="presentation" border="0" cellspacing="0" cellpadding="0">
-  <tr>
-    <td valign="middle"><a href="https://play.google.com/store/apps/details?id=com.hcwebhook.app"><img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play" height="90"></a></td>
-    <td valign="middle">&nbsp;&nbsp;</td>
-    <td valign="middle"><a href="https://apps.apple.com/app/health-webhook/id6763619597"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83" alt="Download on the App Store" height="60"></a></td>
-  </tr>
-</table>
-
-**Get it from the [Google Play Store](https://play.google.com/store/apps/details?id=com.hcwebhook.app) or the [App Store](https://apps.apple.com/app/health-webhook/id6763619597).**
-
 ![HC Webhook](image.png)
 
 ## How it works
@@ -38,23 +28,7 @@ backup/restore · 10 languages. Full list, supported apps, and data types:
 
 ## Install
 
-### Stable (recommended)
-
-Store builds — tested releases, long-term support:
-
-<table role="presentation" border="0" cellspacing="0" cellpadding="0">
-  <tr>
-    <td valign="middle"><a href="https://play.google.com/store/apps/details?id=com.hcwebhook.app"><img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play" height="90"></a></td>
-    <td valign="middle">&nbsp;&nbsp;</td>
-    <td valign="middle"><a href="https://apps.apple.com/app/health-webhook/id6763619597"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83" alt="Download on the App Store" height="60"></a></td>
-  </tr>
-</table>
-
-### Beta (rolling release)
-
-Android APKs straight from GitHub Releases via
-[Obtainium](https://github.com/ImranR98/Obtainium) — newest features first, more
-churn. Add app URL: `https://github.com/mcnaveen/health-connect-webhook`.
+Download the latest signed APK (**`family-fitness-sync.apk`**) from [GitHub Releases](https://github.com/Adikota/health-connect-webhook/releases/tag/latest-family-sync) on your Android phone, install it, and sign in with your Kota Family Fitness email and password.
 
 ## Requirements
 
