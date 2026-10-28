@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">HC Webhook</string>
+    <string name="app_name">Family Fitness Sync</string>
     <string name="onboarding_skip_dialog_title">Skip Introduction?</string>
     <string name="onboarding_skip_dialog_text">You can view it again anytime from the Settings screen.</string>
     <string name="onboarding_skip">Skip</string>

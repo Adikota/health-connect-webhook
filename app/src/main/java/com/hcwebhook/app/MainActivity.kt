@@ -19,6 +19,7 @@ import com.hcwebhook.app.screens.ChangelogScreen
 import com.hcwebhook.app.screens.ConfigurationScreen
 import com.hcwebhook.app.screens.DashboardScreen
 import com.hcwebhook.app.screens.DataTypesScreen
+import com.hcwebhook.app.screens.FamilyLoginScreen
 import com.hcwebhook.app.screens.IntegrationsScreen
 import com.hcwebhook.app.screens.LocalHttpSettingsScreen
 import com.hcwebhook.app.screens.LogsScreen
@@ -90,8 +91,16 @@ class MainActivity : AppCompatActivity() {
                     })
                     return@HCWebhookTheme
                 }
+                var isLoggedIn by remember { mutableStateOf(preferencesManager.isLoggedIn()) }
                 var showOnboarding by remember { mutableStateOf(!preferencesManager.hasSeenOnboarding()) }
-                if (showOnboarding) {
+                if (!isLoggedIn) {
+                    FamilyLoginScreen(
+                        onLoginSuccess = {
+                            isLoggedIn = true
+                            showOnboarding = false
+                        }
+                    )
+                } else if (showOnboarding) {
                     OnboardingScreen(onFinish = {
                         preferencesManager.setHasSeenOnboarding()
                         showOnboarding = false
@@ -101,7 +110,11 @@ class MainActivity : AppCompatActivity() {
                         activity = this@MainActivity,
                         preferencesManager = preferencesManager,
                         permissionLauncher = permissionLauncher,
-                        onRestartOnboarding = { showOnboarding = true }
+                        onRestartOnboarding = { showOnboarding = true },
+                        onLogout = {
+                            preferencesManager.logout()
+                            isLoggedIn = false
+                        }
                     )
                 }
             }
@@ -144,7 +157,8 @@ class MainActivity : AppCompatActivity() {
         activity: MainActivity,
         preferencesManager: PreferencesManager,
         permissionLauncher: androidx.activity.result.ActivityResultLauncher<Set<String>>,
-        onRestartOnboarding: () -> Unit = {}
+        onRestartOnboarding: () -> Unit = {},
+        onLogout: () -> Unit = {}
     ) {
         var selectedScreen by remember { mutableStateOf<NavigationScreen>(NavigationScreen.Home) }
         var showDashboard by remember { mutableStateOf(false) }
@@ -290,6 +304,7 @@ class MainActivity : AppCompatActivity() {
                                 onOpenDashboard = { showDashboard = true },
                                 onOpenDataTypes = { showDataTypes = true },
                                 onOpenIntegrations = { showIntegrations = true },
+                                onLogout = onLogout,
                             )
                             is NavigationScreen.Webhooks -> WebhooksScreen(
                                 onOpenNotificationsSettings = { showNotificationsSettings = true }

@@ -16,7 +16,10 @@ class PreferencesManager(context: Context) {
     private val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
     companion object {
+        const val DEFAULT_BACKEND_URL = "https://kotafamilyfitness.samosanchai.com"
         private const val PREFS_NAME = "hc_webhook_prefs"
+        private const val KEY_CONNECTED_USER_NAME = "connected_user_name"
+        private const val KEY_CONNECTED_USER_EMAIL = "connected_user_email"
         private const val KEY_LAST_SYNC_TS_PREFIX = "last_sync_ts_"
         private const val KEY_LAST_SYNC_IDS_PREFIX = "last_sync_ids_"
         private const val KEY_BUCKET_DEDUP = "bucket_dedup"
@@ -133,7 +136,32 @@ class PreferencesManager(context: Context) {
     }
 
 
+    fun getConnectedUserName(): String? = prefs.getString(KEY_CONNECTED_USER_NAME, null)
+
+    fun setConnectedUserName(name: String?) {
+        if (name == null) prefs.edit().remove(KEY_CONNECTED_USER_NAME).apply()
+        else prefs.edit().putString(KEY_CONNECTED_USER_NAME, name).apply()
+    }
+
+    fun getConnectedUserEmail(): String? = prefs.getString(KEY_CONNECTED_USER_EMAIL, null)
+
+    fun setConnectedUserEmail(email: String?) {
+        if (email == null) prefs.edit().remove(KEY_CONNECTED_USER_EMAIL).apply()
+        else prefs.edit().putString(KEY_CONNECTED_USER_EMAIL, email).apply()
+    }
+
+    fun isLoggedIn(): Boolean = getWebhookConfigs().any { it.isEnabled && it.url.isNotBlank() }
+
+    fun logout() {
+        setWebhookConfigs(emptyList())
+        setConnectedUserName(null)
+        setConnectedUserEmail(null)
+    }
+
     fun getEnabledDataTypes(): Set<HealthDataType> {
+        if (!prefs.contains(KEY_ENABLED_DATA_TYPES)) {
+            return setOf(HealthDataType.STEPS)
+        }
         val typesString = prefs.getString(KEY_ENABLED_DATA_TYPES, "") ?: ""
         return if (typesString.isEmpty()) {
             emptySet()
@@ -343,7 +371,7 @@ class PreferencesManager(context: Context) {
         prefs.edit().putString(KEY_LAST_SYNC_SUMMARY, summary).apply()
     }
 
-    fun hasSeenOnboarding(): Boolean = prefs.getBoolean(KEY_HAS_SEEN_ONBOARDING, false)
+    fun hasSeenOnboarding(): Boolean = prefs.getBoolean(KEY_HAS_SEEN_ONBOARDING, true)
 
     /**
      * Stores the timestamp style on the first launch with this setting. Existing installs keep

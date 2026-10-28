@@ -16,7 +16,6 @@ sealed class NavigationScreen(val route: String, val titleResId: Int, val icon: 
 
 val bottomNavItems = listOf(
     NavigationScreen.Home,
-    NavigationScreen.Webhooks,
     NavigationScreen.Logs,
     NavigationScreen.About
 )

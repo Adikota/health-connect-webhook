@@ -85,11 +85,14 @@ fun ConfigurationScreen(
     onOpenDashboard: () -> Unit = {},
     onOpenDataTypes: () -> Unit = {},
     onOpenIntegrations: () -> Unit = {},
+    onLogout: () -> Unit = {},
     @Suppress("UNUSED_PARAMETER")
     onPermissionsUpdated: (Boolean, Set<String>) -> Unit = { _, _ -> }
 ) {
     val context = LocalContext.current
     val preferencesManager = remember { PreferencesManager(context) }
+    val connectedUserName = remember { preferencesManager.getConnectedUserName() }
+    val connectedUserEmail = remember { preferencesManager.getConnectedUserEmail() }
 
     var syncMode by remember { mutableStateOf(preferencesManager.getSyncMode()) }
     var syncInterval by remember { mutableStateOf(preferencesManager.getSyncIntervalMinutes().toString()) }
@@ -203,6 +206,41 @@ fun ConfigurationScreen(
                 }
             }
 
+            // ── Connected Family Member Card ─────────────────────────────────
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                )
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = connectedUserName ?: "Connected Member",
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        if (!connectedUserEmail.isNullOrBlank()) {
+                            Text(
+                                text = connectedUserEmail,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                    TextButton(onClick = onLogout) {
+                        Text("Sign Out", color = MaterialTheme.colorScheme.error)
+                    }
+                }
+            }
+
             // ── Status ───────────────────────────────────────────────────────
             com.hcwebhook.app.components.SyncHero(
                 title = heroTitle,
@@ -238,8 +276,21 @@ fun ConfigurationScreen(
                     icon = Icons.Filled.Info,
                     title = stringResource(R.string.config_perms_zero_title),
                     body = stringResource(R.string.config_perms_zero_desc),
-                    action = stringResource(R.string.config_action_select_datatypes),
-                    onAction = onOpenDataTypes,
+                    action = stringResource(R.string.config_action_grant),
+                    onAction = {
+                        val permsToRequest = enabledDataTypes
+                            .ifEmpty { setOf(HealthDataType.STEPS) }
+                            .map { HealthPermission.getReadPermission(it.recordClass) }
+                            .toSet() + setOf(
+                                HealthConnectManager.BACKGROUND_PERMISSION_STR,
+                                "android.permission.health.READ_HEALTH_DATA_HISTORY"
+                            )
+                        try {
+                            permissionLauncher.launch(permsToRequest)
+                        } catch (_: Exception) {
+                            onOpenDataTypes()
+                        }
+                    },
                 )
             }
             if (hasPermissions == true && missingPermissionsForEnabled.isNotEmpty()) {

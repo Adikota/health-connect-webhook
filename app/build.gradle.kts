@@ -46,9 +46,9 @@ android {
             val keystoreFile = file("release.jks")
             if (keystoreFile.exists()) {
                 storeFile = keystoreFile
-                storePassword = System.getenv("KEYSTORE_PASSWORD")
-                keyAlias = System.getenv("KEY_ALIAS")
-                keyPassword = System.getenv("KEY_PASSWORD")
+                storePassword = System.getenv("KEYSTORE_PASSWORD")?.takeIf { it.isNotBlank() } ?: "familyfitness123"
+                keyAlias = System.getenv("KEY_ALIAS")?.takeIf { it.isNotBlank() } ?: "familyfitness"
+                keyPassword = System.getenv("KEY_PASSWORD")?.takeIf { it.isNotBlank() } ?: "familyfitness123"
             }
         }
     }
@@ -67,7 +67,7 @@ android {
         getByName("debug") {
             applicationIdSuffix = ".debug"
             // Short, so the launcher does not cut it.
-            manifestPlaceholders["appLabel"] = "HC Debug"
+            manifestPlaceholders["appLabel"] = "Family Fitness Sync"
         }
         // Debug-signed, minified build for R8 smoke tests (issue #77).
         // Run: ./gradlew :app:connectedFossMinifyAndroidTest

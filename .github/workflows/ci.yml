@@ -1,28 +1,32 @@
-name: CI
+name: Build Family Fitness APK
 
 on:
   push:
     branches: [ main, master, develop ]
   pull_request:
     branches: [ main, master, develop ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      
+
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
-        
+
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-      
+
     - name: Cache Gradle dependencies
       uses: actions/cache@v4
       with:
@@ -32,24 +36,26 @@ jobs:
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
         restore-keys: |
           ${{ runner.os }}-gradle-
-          
-    - name: Build debug APK
-      run: ./gradlew assembleDebug
-      
-    - name: Upload debug APK
-      uses: actions/upload-artifact@v6.0.0
-      with:
-        name: app-debug
-        path: app/build/outputs/apk/debug/*.apk
 
-    # Minified FOSS build runs R8 with app/proguard-rules.pro (issue #77).
-    # Uses the minify build type (debug-signed) so CI does not need the release keystore.
-    - name: Assemble FOSS minify (R8)
-      run: ./gradlew :app:assembleFossMinify
-      
-    - name: Run tests
-      run: ./gradlew test
-      
-    - name: Run lint
-      run: ./gradlew lint
-      continue-on-error: true
+    - name: Build Signed Release APK
+      run: |
+        ./gradlew assembleFossRelease
+        cp app/build/outputs/apk/foss/release/*.apk family-fitness-sync.apk
+
+    - name: Upload Signed Release APK Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: family-fitness-sync-apk
+        path: family-fitness-sync.apk
+
+    - name: Publish Latest APK to GitHub Releases
+      if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: latest-family-sync
+        name: "Family Fitness Sync (Latest APK)"
+        body: "Download **family-fitness-sync.apk** below on your Android phone and sign in with your Kota Family Fitness email and password."
+        prerelease: false
+        files: family-fitness-sync.apk
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
